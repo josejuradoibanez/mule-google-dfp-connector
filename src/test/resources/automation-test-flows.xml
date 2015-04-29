@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:google-dfp="http://www.mulesoft.org/schema/mule/google-dfp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.0"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-current.xsd
+http://www.mulesoft.org/schema/mule/google-dfp http://www.mulesoft.org/schema/mule/google-dfp/current/mule-google-dfp.xsd">
+
+	<context:property-placeholder location="automation-credentials.properties" />
+
+	<spring:beans>
+		<util:list id="myList" value-type="java.lang.Long" />
+	</spring:beans>
+
+	<google-dfp:config tokenServerUrl="${google-dfp.tokenServerUrl}"
+		networkCode="${google-dfp.networkCode}" applicationName="${google-dfp.applicationName}"
+		refreshToken="${google-dfp.refreshToken}" clientSecret="${google-dfp.clientSecret}"
+		clientId="${google-dfp.clientId}" endpoint="${google-dfp.endpoint}"
+		name="Google-dfp" doc:name="Google-dfp">
+		<google-dfp:custom-ids ref="myList" />
+	</google-dfp:config>
+
+	<flow name="create-report" doc:name="CreateReport">
+		<google-dfp:create-report config-ref="Google-dfp">
+			<google-dfp:start-date ref="#[flowVars.StartDateRef]" />
+			<google-dfp:end-date ref="#[flowVars.EndDateRef]" />
+		</google-dfp:create-report>
+	</flow>
+
+	<flow name="download-report" doc:name="DownloadReport">
+		<google-dfp:download-report config-ref="Google-dfp">
+			<google-dfp:report-job ref="#[payload]" />
+		</google-dfp:download-report>
+	</flow>
+
+	<flow name="get-all-companies" doc:name="GetAllCompanies">
+		<google-dfp:get-all-companies config-ref="Google-dfp" />
+	</flow>
+
+	<flow name="get-company-by-id" doc:name="GetCompanyById">
+		<google-dfp:get-company-by-id config-ref="Google-dfp"
+			companyId="#[payload]" />
+	</flow>
+
+	<flow name="get-agency-by-name" doc:name="GetAgencyByName">
+		<google-dfp:get-agency-by-name
+			config-ref="Google-dfp" agencyName="#[flowVars.agencyName]" />
+	</flow>
+
+	<flow name="get-advertiser-by-name" doc:name="GetAdvertiserByName">
+		<google-dfp:get-advertiser-by-name
+			config-ref="Google-dfp" advertiserName="#[flowVars.advertiserName]" />
+	</flow>
+
+	<flow name="create-company" doc:name="CreateCompany">
+		<google-dfp:create-company config-ref="Google-dfp">
+			<google-dfp:company ref="#[payload]" />
+		</google-dfp:create-company>
+	</flow>
+
+	<flow name="update-company" doc:name="UpdateCompany">
+		<google-dfp:update-company config-ref="Google-dfp">
+			<google-dfp:company ref="#[flowVars.CompanyRef]" />
+		</google-dfp:update-company>
+	</flow>
+
+</mule>

@@ -1,0 +1,64 @@
+:System_Name: Google DoubleClick for Publishers 
+:Release_date: May 2015
+:Connector_Version: v1.0.0
+:Connector_Guide_Url: github_link_doc
+:Supported_Mule_Version: 3.6.1
+:System_Version: v201411
+
+== {System_Name} Connector Release Notes
+=== {Release_date}
+
+=== Contents
+
+. Compatibility
+. Features
+. Support Resources
+
+Release Notes for version {Connector_Version} of the {System_Name} connector. These Release Notes accompany the  {Connector_Guide_URL} guide.
+ 
+=== Compatibility
+The {System_name} connector is compatible with:
+
+|===
+|Application/Service|Version
+
+|Mule Runtime|{Supported_Mule_Version}
+|{System_Name}|{System_Version}
+|===
+
+=== Features
+
+*Company Service*:
+
+* Create Company
+* Update Company
+* Get All Companies
+* Get Advertiser by Name
+* Get Agency by Name
+* Get Company by ID
+
+*Report Service*:
+
+* Create Report
+* Download Report
+
+*Reconciliation Report Service*:
+
+* Create Reconciliation Report Service
+* Get Reconciliation Report IDs By Start Date
+
+*Reconciliation Report Row Service*:
+
+* Get Reconciliation Report Rows
+
+Example of a Feature listing:
+
+NTLM Authentication - NTLM authentication is now more robust and widely compatible with more domain controller configurations. 
+
+=== Support Resources
+
+. Visit https://developers.google.com/doubleclick-publishers/docs/reference/v201411/ActivityGroupServices[DFP API documentation] page for information on DFP v201411 API.
+. Learn how to Install and Configure Anypoint Connectors in Anypoint Studio.
+. Access MuleSoft’s forum to pose questions and get help from Mule’s broad community of users.
+. To access MuleSoft’s expert support team, subscribe to Mule ESB Enterprise and log in to MuleSoft’s Customer Portal.
+

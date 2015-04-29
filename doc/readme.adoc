@@ -1,0 +1,48 @@
+:mule_version: 3.6.1
+---
+= GoogleDfp Anypoint™ Connector
+---
+
+Google's DoubleClick for Publishers (DFP) ad management solution is designed to meet the growing needs of publishers.
+Developers can use the DFP API to build applications to manage inventory, create orders, pull reports, and more.
+
+== Author
+Ricston Ltd.
+
+== Supported Mule runtime versions
+Mule {mule_version}
+
+== Google DFP supported versions
+Google DFP v201411
+
+== The DFP connector supports the following modules:
+*Company Service*:
+
+* Create Company
+* Update Company
+* Get All Companies
+* Get Advertiser by Name
+* Get Agency by Name
+* Get Company by ID
+
+*Report Service*:
+
+* Create Report
+* Download Report
+
+*Reconciliation Report Service*:
+
+* Create Reconciliation Report Service
+* Get Reconciliation Report IDs By Start Date
+
+*Reconciliation Report Row Service*:
+
+* Get Reconciliation Report Rows
+
+== Installation 
+
+You can access the full documentation <here>.
+
+== Reporting Issues
+
+We use GitHub:Issues for tracking issues with this connector. You can report new issues at this link https://github.com/mulesoft/<connector-repository-name>/issues.

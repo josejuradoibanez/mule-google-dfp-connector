@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!--createReport -->
+	<util:map id="createReportTestData" key-type="java.lang.String"
+		map-class="java.util.HashMap" scope="prototype" value-type="java.lang.Object">
+		<entry key="StartDateRef" value-ref="createReport_StartDate" />
+		<entry key="EndDateRef" value-ref="createReport_EndDate" />
+	</util:map>
+	<bean class="com.google.api.ads.dfp.axis.v201411.Date" id="createReport_StartDate">
+		<property name="day" value="1" />
+		<property name="month" value="2" />
+		<property name="year" value="2015" />
+	</bean>
+	<bean class="com.google.api.ads.dfp.axis.v201411.Date" id="createReport_EndDate">
+		<property name="day" value="1" />
+		<property name="month" value="4" />
+		<property name="year" value="2015" />
+	</bean>
+
+	<!-- getAllCompanies -->
+	<util:map id="getAllCompaniesTestData" key-type="java.lang.String"
+		map-class="java.util.HashMap" scope="prototype" value-type="java.lang.Object">
+	</util:map>
+
+	<!-- getAgencyByName -->
+	<util:map id="getAgencyByNameTestData" key-type="java.lang.String"
+		map-class="java.util.HashMap" scope="prototype" value-type="java.lang.Object">
+		<entry key="agencyName" value="Ricston Ltd." />
+	</util:map>
+
+	<!--getAdvertiserByName -->
+	<!-- <util:map id="getAdvertiserByNameTestData" key-type="java.lang.String" -->
+	<!-- map-class="java.util.HashMap" scope="prototype" value-type="java.lang.Object"> -->
+	<!-- <entry key="advertiserName" value="" /> -->
+	<!-- </util:map> -->
+
+	<!--createCompany -->
+	<util:map id="createCompanyTestData" key-type="java.lang.String"
+		map-class="java.util.HashMap" scope="prototype" value-type="java.lang.Object">
+		<entry key="company" value-ref="createCompany_Company" />
+	</util:map>
+	<bean class="com.google.api.ads.dfp.axis.v201411.Company" id="createCompany_Company">
+		<property name="name" value="Ricston Ltd" />
+		<property name="address" value="Mosta, Malta" />
+		<property name="email" value="ops@ricston.com" />
+	</bean>
+
+	<!--updateCompany -->
+	<!-- <util:map id="updateCompanyTestData" key-type="java.lang.String" -->
+	<!-- map-class="java.util.HashMap" scope="prototype" value-type="java.lang.Object"> -->
+	<!-- <entry key="company" value-ref="updateCompany_Company" /> -->
+	<!-- </util:map> -->
+	<!-- <bean class="" id="updateCompany_Company"> -->
+	<!-- <property name="" value="" /> -->
+	<!-- </bean> -->
+</beans>
