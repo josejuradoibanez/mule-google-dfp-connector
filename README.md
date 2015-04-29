@@ -3,7 +3,7 @@
 Google's DoubleClick for Publishers (DFP) ad management solution is designed to meet the growing needs of publishers. Developers can use the DFP API to build applications to manage inventory, create orders, pull reports, and more.
 
 # Mule supported versions
-Mule 3.6.1
+Mule ESB version 3.5.x
 
 #The DFP connector supports the following modules:
 * Company Service
@@ -17,7 +17,7 @@ For information about usage and installation you can check our documentation at
 
 # Reporting Issues
 
-We use GitHub:Issues for tracking issues with this connector. You can report new issues at this link http://github.com/mulesoft/google-dfp/issues.
+We use GitHub:Issues for tracking issues with this connector. You can report new issues at this link https://github.com/Ricston/mule-google-dfp-connector/issues
 
 # Support Resources
 
