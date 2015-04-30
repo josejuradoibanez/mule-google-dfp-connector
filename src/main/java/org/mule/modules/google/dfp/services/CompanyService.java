@@ -163,7 +163,7 @@ public class CompanyService {
 		}
 	}
 
-	public String getAgencyByName(DfpSession session, String name)
+	public Company getAgencyByName(DfpSession session, String name)
 			throws GetAgencyByNameException, TooManyAgenciesFoundException {
 
 		try {
@@ -180,7 +180,7 @@ public class CompanyService {
 
 			// Default for total result set size.
 			int totalResultSetSize = 0;
-			String externalId = "";
+			Company companyFound= null;
 
 			do {
 				// Get companies by statement.
@@ -194,9 +194,7 @@ public class CompanyService {
 						throw new TooManyAgenciesFoundException(
 								totalResultSetSize);
 					} else {
-						for (Company company : page.getResults()) {
-							externalId = company.getExternalId();
-						}
+						companyFound = page.getResults(0);
 					}
 
 				} else {
@@ -209,7 +207,7 @@ public class CompanyService {
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
 			logger.info("Number of Agencies found:" + totalResultSetSize);
-			return externalId;
+			return companyFound;
 		} catch (ApiException e) {
 			throw new GetAgencyByNameException(e);
 		} catch (RemoteException e) {

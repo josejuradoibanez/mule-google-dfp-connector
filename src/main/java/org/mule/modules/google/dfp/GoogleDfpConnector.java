@@ -165,14 +165,14 @@ public class GoogleDfpConnector {
 	 * 
 	 * @param agencyName
 	 *            The agency name to retrieve
-	 * @return The agency ID
+	 * @return The company found
 	 * @throws GetAgencyByNameException
 	 *             Get Agency exception
 	 * @throws TooManyAgenciesFoundException
 	 *             Too many agencies found exception
 	 */
 	@Processor
-	public String getAgencyByName(String agencyName)
+	public Company getAgencyByName(String agencyName)
 			throws GetAgencyByNameException, TooManyAgenciesFoundException {
 		return companyService.getAgencyByName(session, agencyName);
 	}
