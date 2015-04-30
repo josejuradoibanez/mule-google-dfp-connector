@@ -62,7 +62,7 @@ image::images/install01.png[]
 . On the *Install* wizard, click the drop-down arrow for the *Work with:* field, then select the Anypoint™ Connector update site.
 +
 image::images/install02.png[]
-. In the table below the *Filter* field, click to expand the *Standard* folder, and click the check box for *GoogleDfp Connector (Mule 3.5+)*. Click *Next*.
+. In the table below the *Filter* field, click to expand the *Community* folder, and click the check box for *GoogleDfp Connector (Mule 3.5+)*. Click *Next*.
 +
 image::images/install03.png[]
 . In Install Details, click *Next*.
