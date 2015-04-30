@@ -24,13 +24,11 @@ import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
-import org.mule.modules.google.dfp.exceptions.GetCompanyCommentByNameException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportRowException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 import org.mule.modules.google.dfp.exceptions.TooManyAdvertisersFoundException;
 import org.mule.modules.google.dfp.exceptions.TooManyAgenciesFoundException;
-import org.mule.modules.google.dfp.exceptions.TooManyCompaniesFoundException;
 import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
 import org.mule.modules.google.dfp.reconciliationreport.ReconciliationQueryParams;
 import org.mule.modules.google.dfp.services.CompanyService;
@@ -105,8 +103,6 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Create Report
-	 * 
 	 * Creates a report given a date range
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
@@ -128,8 +124,6 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Download Report
-	 * 
 	 * Download a report from the Google DFP services
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
@@ -149,8 +143,6 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Get All Companies
-	 * 
 	 * Retrieve all companies
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
@@ -166,8 +158,6 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Get Agency By Name
-	 * 
 	 * Retrieve the agency ID by name
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
@@ -188,8 +178,6 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Get Advertiser By Name
-	 * 
 	 * Retrieve the advertiser ID by name
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
@@ -211,9 +199,7 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Get reconciliation report ids by start date
-	 * 
-	 * Retrieve the reconciliation report ids given the start date
+	 * Retrieve the reconciliation report IDs given the start date
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
 	 * google-dfp:get-reconciliation-report-ids-by-start-date}
@@ -241,10 +227,8 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Get Reconciliation report rows
-	 * 
-	 * Retrieve Reconciliation report rows given the reconciliation report id,
-	 * order id and line item id
+	 * Retrieve Reconciliation report rows given the reconciliation report ID,
+	 * order ID and line item ID
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
 	 * google-dfp:get-reconciliation-report-rows}
@@ -268,15 +252,13 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Get Company by Id
-	 * 
-	 * Retrieve the company by id. Null is returned if the company is not found
+	 * Retrieve the company by ID. Null is returned if the company is not found
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
 	 * google-dfp:get-company-by-id}
 	 * 
 	 * @param companyId
-	 *            The company id
+	 *            The company ID
 	 * @return The company
 	 * @throws GetCompanyByIdException
 	 *             Get Company By ID Exception
@@ -288,8 +270,6 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Create company
-	 * 
 	 * Create a company by supplying a company object
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample
@@ -308,8 +288,6 @@ public class GoogleDfpConnector {
 	}
 
 	/**
-	 * Update Company
-	 * 
 	 * Update company by supplying a company object
 	 * 
 	 * {@sample.xml ../../../doc/google-dfp-connector.xml.sample

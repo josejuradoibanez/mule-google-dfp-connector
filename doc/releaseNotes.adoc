@@ -51,14 +51,10 @@ The {System_name} connector is compatible with:
 
 * Get Reconciliation Report Rows
 
-Example of a Feature listing:
-
-NTLM Authentication - NTLM authentication is now more robust and widely compatible with more domain controller configurations. 
-
 === Support Resources
 
-. Visit https://developers.google.com/doubleclick-publishers/docs/reference/v201411/ActivityGroupServices[DFP API documentation] page for information on DFP v201411 API.
-. Learn how to Install and Configure Anypoint Connectors in Anypoint Studio.
-. Access MuleSoft’s forum to pose questions and get help from Mule’s broad community of users.
-. To access MuleSoft’s expert support team, subscribe to Mule ESB Enterprise and log in to MuleSoft’s Customer Portal.
+. Visit https://developers.google.com/doubleclick-publishers/docs/reference/v201411/ActivityGroupService[DFP API documentation] page for information on DFP v201411 API.
+. Learn how to Install and Configure Anypoint™ Connectors in Anypoint™ Studio http://www.mulesoft.org/documentation/display/current/Installing+Connectors[here].
+. Access MuleSoft’s http://forum.mulesoft.org/mulesoft[MuleForge forum] to pose questions and get help from Mule’s broad community of users.
+. To access MuleSoft’s expert support team, https://www.mulesoft.com/platform/soa/mule-esb-open-source-esb[subscribe] to Mule ESB Enterprise and log in to MuleSoft’s https://www.mulesoft.com/support-login[Customer Portal].
 
