@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.cxf.common.util.StringUtils;
 import org.mule.api.annotations.Configurable;
 import org.mule.api.annotations.ConnectionStrategy;
 import org.mule.api.annotations.Connector;
@@ -46,7 +47,8 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
 /**
  * Google DFP Connector
  *
- * {@sample.config ../../../doc/google-dfp-connector.xml.sample google-dfp:config}
+ * {@sample.config ../../../doc/google-dfp-connector.xml.sample
+ * google-dfp:config}
  * 
  * @author Ricston, Ltd.
  */
@@ -84,13 +86,14 @@ public class GoogleDfpConnector {
 		// Initialize and configure Report Service
 		reportService = new ReportService();
 
-		Long[] ids = customIds.toArray(new Long[customIds.size()]);
-		long[] customFieldIds = ArrayUtils.toPrimitive(ids);
-
-		// set custom fields in the report service query
-		if (customFieldIds.length > 0) {
-			reportService.setCustomFieldsIds(customFieldIds);
+		if (customIds != null) {
+			if (customIds.isEmpty()) {
+				Long[] ids = customIds.toArray(new Long[customIds.size()]);
+				long[] customFieldIds = ArrayUtils.toPrimitive(ids);
+				reportService.setCustomFieldsIds(customFieldIds);
+			}
 		}
+
 
 		// Initialize and configure Company Service
 		companyService = new CompanyService();

@@ -23,6 +23,7 @@ import org.mule.api.annotations.components.ConnectionManagement;
 import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.Optional;
 
 import com.google.api.ads.common.lib.auth.OfflineCredentials;
 import com.google.api.ads.common.lib.auth.OfflineCredentials.Api;
@@ -52,6 +53,7 @@ public class GoogleDfpConnectionStrategy {
 	 * The token server URL for Google DFP
 	 */
 	@Configurable
+	@Optional
 	@Default(value = "https://accounts.google.com/o/oauth2/token")
 	private String tokenServerUrl;
 
@@ -66,6 +68,7 @@ public class GoogleDfpConnectionStrategy {
 	 * The endpoint for Google DFP
 	 */
 	@Configurable
+	@Optional
 	@Default(value = "https://ads.google.com/")
 	private String endpoint;
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:stdio="http://www.mulesoft.org/schema/mule/stdio"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:context="http://www.springframework.org/schema/context"
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:stdio="http://www.mulesoft.org/schema/mule/stdio" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:google-dfp="http://www.mulesoft.org/schema/mule/google-dfp"
 	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
@@ -17,18 +18,11 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
 	<context:property-placeholder location="classpath:demo.properties" />
 
-	<spring:beans>
-		<util:list id="customIds" value-type="java.lang.Long">
-			<spring:value>123</spring:value>
-		</util:list>
-	</spring:beans>
-
 	<google-dfp:config name="GoogleDfp__Authentication"
 		clientId="${google-dfp.clientId}" clientSecret="${google-dfp.clientSecret}"
 		refreshToken="${google-dfp.refreshToken}" networkCode="${google-dfp.networkCode}"
 		applicationName="${google-dfp.applicationName}" endpoint="${google-dfp.endpoint}"
 		tokenServerUrl="${google-dfp.tokenServerUrl}" doc:name="GoogleDfp">
-		<google-dfp:custom-ids ref="customIds" />
 	</google-dfp:config>
 
 
@@ -38,28 +32,38 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 	<flow name="googledemoFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
 			path="/updateCompany" doc:name="HTTP" allowedMethods="PUT" />
-        <set-session-variable variableName="newname" value="#[message.inboundProperties.'http.query.params'.newname]" doc:name="Store name"/>
-        <google-dfp:get-agency-by-name config-ref="GoogleDfp__Authentication" agencyName="#[message.inboundProperties.'http.query.params'.name]" doc:name="Get Agency"/>
-        <scripting:component doc:name="Groovy">
-            <scripting:script engine="Groovy"><![CDATA[import com.google.api.ads.dfp.axis.v201411.Company
+		<set-session-variable variableName="newname"
+			value="#[message.inboundProperties.'http.query.params'.newname]"
+			doc:name="Store name" />
+		<google-dfp:get-agency-by-name
+			config-ref="GoogleDfp__Authentication" agencyName="#[message.inboundProperties.'http.query.params'.name]"
+			doc:name="Get Agency" />
+		<scripting:component doc:name="Set Payload to new Company">
+			<scripting:script engine="Groovy"><![CDATA[import com.google.api.ads.dfp.axis.v201411.Company
 
-Company companyToUpdate =  (Company) message.getPayload()
-companyToUpdate.setName(message.getProperty("newname",org.mule.api.transport.PropertyScope.SESSION))
+if(message.getPayload() instanceof Company){
+	Company companyToUpdate =  (Company) message.getPayload()
+	companyToUpdate.setName(message.getProperty("newname",org.mule.api.transport.PropertyScope.SESSION))
 
-message.setPayload(companyToUpdate)
-return message]]></scripting:script>
-        </scripting:component>
-        <google-dfp:update-company config-ref="GoogleDfp__Authentication" doc:name="Update Company">
-            <google-dfp:company ref="#[payload]"/>
-        </google-dfp:update-company>
-		<!-- <choice doc:name="Choice"> -->
-		<!-- <when -->
-		<!-- expression="#[payload instanceof com.google.api.ads.dfp.axis.v201411.Company]"> -->
-		<!-- <logger level="ERROR" message="Company exists" doc:name="Logger"/> -->
-		<!-- </when> -->
-		<!-- <otherwise> -->
-		<!-- <logger level="ERROR" message="Does not exists" doc:name="Logger"/> -->
-		<!-- </otherwise> -->
-		<!-- </choice> -->
+	message.setPayload(companyToUpdate)
+	message.setInvocationProperty("companyFound", true)
+}else{
+	message.setInvocationProperty("companyFound", false)
+}
+
+return message
+]]></scripting:script>
+		</scripting:component>
+		<choice doc:name="Choice">
+			<when expression="#[flowVars.companyFound]">
+				<google-dfp:update-company config-ref="GoogleDfp__Authentication"
+					doc:name="Update Company">
+					<google-dfp:company ref="#[payload]" />
+				</google-dfp:update-company>
+			</when>
+			<otherwise>
+				<logger level="INFO" message="No company to update" />
+			</otherwise>
+		</choice>
 	</flow>
 </mule>
