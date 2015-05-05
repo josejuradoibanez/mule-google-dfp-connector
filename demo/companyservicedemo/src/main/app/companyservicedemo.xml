@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+<mule xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
 	xmlns:stdio="http://www.mulesoft.org/schema/mule/stdio" xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:google-dfp="http://www.mulesoft.org/schema/mule/google-dfp"
@@ -14,7 +14,8 @@ http://www.mulesoft.org/schema/mule/google-dfp http://www.mulesoft.org/schema/mu
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-current.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd">
 
 	<context:property-placeholder location="classpath:demo.properties" />
 
@@ -28,6 +29,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
 	<http:listener-config name="HTTP_Listener_Configuration"
 		host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration" />
+    <data-mapper:config name="Pojo_To_Company" transformationGraphPath="pojo_to_company.grf" doc:name="Pojo_To_Company"/>
 
 	<flow name="googledemoFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
@@ -38,32 +40,23 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 		<google-dfp:get-agency-by-name
 			config-ref="GoogleDfp__Authentication" agencyName="#[message.inboundProperties.'http.query.params'.name]"
 			doc:name="Get Agency" />
-		<scripting:component doc:name="Set Payload to new Company">
-			<scripting:script engine="Groovy"><![CDATA[import com.google.api.ads.dfp.axis.v201411.Company
-
-if(message.getPayload() instanceof Company){
-	Company companyToUpdate =  (Company) message.getPayload()
-	companyToUpdate.setName(message.getProperty("newname",org.mule.api.transport.PropertyScope.SESSION))
-
-	message.setPayload(companyToUpdate)
-	message.setInvocationProperty("companyFound", true)
-}else{
-	message.setInvocationProperty("companyFound", false)
-}
-
-return message
-]]></scripting:script>
-		</scripting:component>
+		
 		<choice doc:name="Choice">
-			<when expression="#[flowVars.companyFound]">
+			<when expression="#[payload instanceof com.google.api.ads.dfp.axis.v201411.Company]">
+                <data-mapper:transform config-ref="Pojo_To_Company" doc:name="Pojo To Company">
+                    <data-mapper:input-arguments>
+                        <data-mapper:input-argument key="inputName">#[sessionVars.newname]</data-mapper:input-argument>
+                    </data-mapper:input-arguments>
+                </data-mapper:transform>
 				<google-dfp:update-company config-ref="GoogleDfp__Authentication"
 					doc:name="Update Company">
 					<google-dfp:company ref="#[payload]" />
 				</google-dfp:update-company>
 			</when>
 			<otherwise>
-				<logger level="INFO" message="No company to update" />
+				<logger level="INFO" message="No company to update" doc:name="Logger"/>
 			</otherwise>
 		</choice>
 	</flow>
+	
 </mule>

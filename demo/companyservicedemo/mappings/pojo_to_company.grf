@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph __version="3.5.0" author="clare" created="Tue May 05 15:38:21 CEST 2015" description="Pojo To Company" guiVersion="3.4.4.P" id="1430834139301" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue May 05 15:38:21 CEST 2015" modifiedBy="clare" name="Pojo_To_Company" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="1" __referenceCounter="1" __sourcePath="{}/object/appliedLabels" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="4ea718fe-e2da-4124-ad58-387f941e0f74" _parent_id="__parent_id" _type="Input" id="313099fd-8bfc-4772-bef0-923564d32a64">
+<Record fieldDelimiter="," name="appliedLabels" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="1" __sourcePath="{}/object/appliedLabels/isNegated" containerType="SINGLE" label="isNegated" name="isNegated" type="boolean"/>
+<Field __index="2" __sourcePath="{}/object/appliedLabels/labelId" containerType="SINGLE" label="labelId" name="labelId" type="long"/>
+</Record>
+</Metadata>
+<Metadata __index="1" __referenceCounter="1" __sourcePath="{}/object/appliedLabels" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="85380ea8-4b48-4bc8-9f24-5f2c9d9626bb" _parent_id="__parent_id" _type="Output" id="33122e6a-7e11-4414-be07-ada6da4f72b0">
+<Record fieldDelimiter="," name="appliedLabels" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __index="1" __sourcePath="{}/object/appliedLabels/isNegated" containerType="SINGLE" label="isNegated" name="isNegated" type="boolean"/>
+<Field __index="2" __sourcePath="{}/object/appliedLabels/labelId" containerType="SINGLE" label="labelId" name="labelId" type="long"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Input" id="4ea718fe-e2da-4124-ad58-387f941e0f74">
+<Record fieldDelimiter="," name="Company" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/object/address" containerType="SINGLE" label="address" name="address" type="string"/>
+<Field __index="3" __sourcePath="{}/object/appliedTeamIds" containerType="list" label="appliedTeamIds" name="appliedTeamIds" type="long"/>
+<Field __index="4" __sourcePath="{}/object/comment" containerType="SINGLE" label="comment" name="comment" type="string"/>
+<Field __index="5" __sourcePath="{}/object/creditStatus/value" containerType="SINGLE" label="value" name="value" type="string"/>
+<Field __index="6" __sourcePath="{}/object/email" containerType="SINGLE" label="email" name="email" type="string"/>
+<Field __index="7" __sourcePath="{}/object/enableSameAdvertiserCompetitiveExclusion" containerType="SINGLE" label="enableSameAdvertiserCompetitiveExclusion" name="enableSameAdvertiserCompetitiveExclusion" type="boolean"/>
+<Field __index="8" __sourcePath="{}/object/externalId" containerType="SINGLE" label="externalId" name="externalId" type="string"/>
+<Field __index="9" __sourcePath="{}/object/faxPhone" containerType="SINGLE" label="faxPhone" name="faxPhone" type="string"/>
+<Field __index="10" __sourcePath="{}/object/id" containerType="SINGLE" label="id" name="id" type="long"/>
+<Field __index="11" __sourcePath="{}/object/lastModifiedDateTime/date/day" containerType="SINGLE" label="day" name="day" type="integer"/>
+<Field __index="12" __sourcePath="{}/object/lastModifiedDateTime/date/month" containerType="SINGLE" label="month" name="month" type="integer"/>
+<Field __index="13" __sourcePath="{}/object/lastModifiedDateTime/date/year" containerType="SINGLE" label="year" name="year" type="integer"/>
+<Field __index="14" __sourcePath="{}/object/lastModifiedDateTime/hour" containerType="SINGLE" label="hour" name="hour" type="integer"/>
+<Field __index="15" __sourcePath="{}/object/lastModifiedDateTime/minute" containerType="SINGLE" label="minute" name="minute" type="integer"/>
+<Field __index="16" __sourcePath="{}/object/lastModifiedDateTime/second" containerType="SINGLE" label="second" name="second" type="integer"/>
+<Field __index="17" __sourcePath="{}/object/lastModifiedDateTime/timeZoneID" containerType="SINGLE" label="timeZoneID" name="timeZoneID" type="string"/>
+<Field __index="18" __sourcePath="{}/object/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="19" __sourcePath="{}/object/primaryContactId" containerType="SINGLE" label="primaryContactId" name="primaryContactId" type="long"/>
+<Field __index="20" __sourcePath="{}/object/primaryPhone" containerType="SINGLE" label="primaryPhone" name="primaryPhone" type="string"/>
+<Field __index="21" __sourcePath="{}/object/thirdPartyCompanyId" containerType="SINGLE" label="thirdPartyCompanyId" name="thirdPartyCompanyId" type="integer"/>
+<Field __index="22" __sourcePath="{}/object/type/value" containerType="SINGLE" label="value" name="value_1" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Output" id="85380ea8-4b48-4bc8-9f24-5f2c9d9626bb">
+<Record fieldDelimiter="," name="Company" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/object/address" containerType="SINGLE" label="address" name="address" type="string"/>
+<Field __index="3" __sourcePath="{}/object/appliedTeamIds" containerType="list" label="appliedTeamIds" name="appliedTeamIds" type="long"/>
+<Field __index="4" __sourcePath="{}/object/comment" containerType="SINGLE" label="comment" name="comment" type="string"/>
+<Field __index="5" __sourcePath="{}/object/email" containerType="SINGLE" label="email" name="email" type="string"/>
+<Field __index="6" __sourcePath="{}/object/enableSameAdvertiserCompetitiveExclusion" containerType="SINGLE" label="enableSameAdvertiserCompetitiveExclusion" name="enableSameAdvertiserCompetitiveExclusion" type="boolean"/>
+<Field __index="7" __sourcePath="{}/object/externalId" containerType="SINGLE" label="externalId" name="externalId" type="string"/>
+<Field __index="8" __sourcePath="{}/object/faxPhone" containerType="SINGLE" label="faxPhone" name="faxPhone" type="string"/>
+<Field __index="9" __sourcePath="{}/object/id" containerType="SINGLE" label="id" name="id" type="long"/>
+<Field __index="10" __sourcePath="{}/object/lastModifiedDateTime/date/day" containerType="SINGLE" label="day" name="day" type="integer"/>
+<Field __index="11" __sourcePath="{}/object/lastModifiedDateTime/date/month" containerType="SINGLE" label="month" name="month" type="integer"/>
+<Field __index="12" __sourcePath="{}/object/lastModifiedDateTime/date/year" containerType="SINGLE" label="year" name="year" type="integer"/>
+<Field __index="13" __sourcePath="{}/object/lastModifiedDateTime/hour" containerType="SINGLE" label="hour" name="hour" type="integer"/>
+<Field __index="14" __sourcePath="{}/object/lastModifiedDateTime/minute" containerType="SINGLE" label="minute" name="minute" type="integer"/>
+<Field __index="15" __sourcePath="{}/object/lastModifiedDateTime/second" containerType="SINGLE" label="second" name="second" type="integer"/>
+<Field __index="16" __sourcePath="{}/object/lastModifiedDateTime/timeZoneID" containerType="SINGLE" label="timeZoneID" name="timeZoneID" type="string"/>
+<Field __index="17" __sourcePath="{}/object/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="18" __sourcePath="{}/object/primaryContactId" containerType="SINGLE" label="primaryContactId" name="primaryContactId" type="long"/>
+<Field __index="19" __sourcePath="{}/object/primaryPhone" containerType="SINGLE" label="primaryPhone" name="primaryPhone" type="string"/>
+<Field __index="20" __sourcePath="{}/object/thirdPartyCompanyId" containerType="SINGLE" label="thirdPartyCompanyId" name="thirdPartyCompanyId" type="integer"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+<Entry dictval.__javaType="java.lang.String" id="DictionaryEntry2" input="true" name="inputName" output="false" type="string"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Pojo READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath=".">
+  <Mapping cloverField="address" trim="true" xpath="address"/>
+  <Mapping cloverField="appliedTeamIds" trim="true" xpath="appliedTeamIds"/>
+  <Mapping cloverField="comment" trim="true" xpath="comment"/>
+  <Mapping cloverField="value" trim="true" xpath="creditStatus/value"/>
+  <Mapping cloverField="email" trim="true" xpath="email"/>
+  <Mapping cloverField="enableSameAdvertiserCompetitiveExclusion" trim="true" xpath="enableSameAdvertiserCompetitiveExclusion"/>
+  <Mapping cloverField="externalId" trim="true" xpath="externalId"/>
+  <Mapping cloverField="faxPhone" trim="true" xpath="faxPhone"/>
+  <Mapping cloverField="id" trim="true" xpath="id"/>
+  <Mapping cloverField="day" trim="true" xpath="lastModifiedDateTime/date/day"/>
+  <Mapping cloverField="month" trim="true" xpath="lastModifiedDateTime/date/month"/>
+  <Mapping cloverField="year" trim="true" xpath="lastModifiedDateTime/date/year"/>
+  <Mapping cloverField="hour" trim="true" xpath="lastModifiedDateTime/hour"/>
+  <Mapping cloverField="minute" trim="true" xpath="lastModifiedDateTime/minute"/>
+  <Mapping cloverField="second" trim="true" xpath="lastModifiedDateTime/second"/>
+  <Mapping cloverField="timeZoneID" trim="true" xpath="lastModifiedDateTime/timeZoneID"/>
+  <Mapping cloverField="name" trim="true" xpath="name"/>
+  <Mapping cloverField="primaryContactId" trim="true" xpath="primaryContactId"/>
+  <Mapping cloverField="primaryPhone" trim="true" xpath="primaryPhone"/>
+  <Mapping cloverField="thirdPartyCompanyId" trim="true" xpath="thirdPartyCompanyId"/>
+  <Mapping cloverField="value_1" trim="true" xpath="type/value"/>
+  <Context generatedKey="__parent_id" outPort="1" parentKey="__id" sequenceField="__id" xpath="appliedLabels">
+    <Mapping cloverField="isNegated" trim="true" xpath="isNegated"/>
+    <Mapping cloverField="labelId" trim="true" xpath="labelId"/>
+  </Context>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[JAVA]]></attr>
+<attr name="schema"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><schema-object>
+  <typed-object-ref type-ref="com.google.api.ads.dfp.axis.v201411.Company"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.Company">
+    <typed-object-ref name="address" type-ref="java.lang.String"/>
+    <schema-collection array="true" name="appliedLabels">
+      <typed-object-ref type-ref="com.google.api.ads.dfp.axis.v201411.AppliedLabel"/>
+    </schema-collection>
+    <schema-collection array="true" name="appliedTeamIds">
+      <typed-object-ref type-ref="long"/>
+    </schema-collection>
+    <typed-object-ref name="comment" type-ref="java.lang.String"/>
+    <typed-object-ref name="creditStatus" type-ref="com.google.api.ads.dfp.axis.v201411.CompanyCreditStatus"/>
+    <typed-object-ref name="email" type-ref="java.lang.String"/>
+    <typed-object-ref name="enableSameAdvertiserCompetitiveExclusion" type-ref="java.lang.Boolean"/>
+    <typed-object-ref name="externalId" type-ref="java.lang.String"/>
+    <typed-object-ref name="faxPhone" type-ref="java.lang.String"/>
+    <typed-object-ref name="id" type-ref="java.lang.Long"/>
+    <typed-object-ref name="lastModifiedDateTime" type-ref="com.google.api.ads.dfp.axis.v201411.DateTime"/>
+    <typed-object-ref name="name" type-ref="java.lang.String"/>
+    <typed-object-ref name="primaryContactId" type-ref="java.lang.Long"/>
+    <typed-object-ref name="primaryPhone" type-ref="java.lang.String"/>
+    <typed-object-ref name="thirdPartyCompanyId" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="type" type-ref="com.google.api.ads.dfp.axis.v201411.CompanyType"/>
+  </typed-object>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.CompanyType">
+    <typed-object-ref name="value" type-ref="java.lang.String"/>
+  </typed-object>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.AppliedLabel">
+    <typed-object-ref name="isNegated" type-ref="java.lang.Boolean"/>
+    <typed-object-ref name="labelId" type-ref="java.lang.Long"/>
+  </typed-object>
+  <typed-object type="java.lang.Boolean"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.Date">
+    <typed-object-ref name="day" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="month" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="year" type-ref="java.lang.Integer"/>
+  </typed-object>
+  <typed-object type="java.lang.Long"/>
+  <typed-object type="java.lang.Integer"/>
+  <typed-object type="java.lang.String"/>
+  <typed-object type="long"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.CompanyCreditStatus">
+    <typed-object-ref name="value" type-ref="java.lang.String"/>
+  </typed-object>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.DateTime">
+    <typed-object-ref name="date" type-ref="com.google.api.ads.dfp.axis.v201411.Date"/>
+    <typed-object-ref name="hour" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="minute" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="second" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="timeZoneID" type-ref="java.lang.String"/>
+  </typed-object>
+</schema-object>
+]]></attr>
+</Node>
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Pojo WRITER" guiX="900" guiY="20" id="BEAN_WRITER0" type="BEAN_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<object xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <address>$0.address</address>
+  <clover:collection clover:name="appliedLabels">
+    <item clover:inPort="1" clover:key="__parent_id" clover:parentKey="__id">
+      <isNegated>$1.isNegated</isNegated>
+      <labelId>$1.labelId</labelId>
+    </item>
+  </clover:collection>
+  <clover:collection clover:name="appliedTeamIds">$0.appliedTeamIds</clover:collection>
+  <comment>$0.comment</comment>
+  <email>$0.email</email>
+  <enableSameAdvertiserCompetitiveExclusion>$0.enableSameAdvertiserCompetitiveExclusion</enableSameAdvertiserCompetitiveExclusion>
+  <externalId>$0.externalId</externalId>
+  <faxPhone>$0.faxPhone</faxPhone>
+  <id>$0.id</id>
+  <lastModifiedDateTime>
+    <date>
+      <day>$0.day</day>
+      <month>$0.month</month>
+      <year>$0.year</year>
+    </date>
+    <hour>$0.hour</hour>
+    <minute>$0.minute</minute>
+    <second>$0.second</second>
+    <timeZoneID>$0.timeZoneID</timeZoneID>
+  </lastModifiedDateTime>
+  <name>$0.name</name>
+  <primaryContactId>$0.primaryContactId</primaryContactId>
+  <primaryPhone>$0.primaryPhone</primaryPhone>
+  <thirdPartyCompanyId>$0.thirdPartyCompanyId</thirdPartyCompanyId>
+</object>]]></attr>
+<attr name="_data_format"><![CDATA[JAVA]]></attr>
+<attr name="schema"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><schema-object>
+  <typed-object-ref type-ref="com.google.api.ads.dfp.axis.v201411.Company"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.Company">
+    <typed-object-ref name="address" type-ref="java.lang.String"/>
+    <schema-collection array="true" name="appliedLabels">
+      <typed-object-ref type-ref="com.google.api.ads.dfp.axis.v201411.AppliedLabel"/>
+    </schema-collection>
+    <schema-collection array="true" name="appliedTeamIds">
+      <typed-object-ref type-ref="long"/>
+    </schema-collection>
+    <typed-object-ref name="comment" type-ref="java.lang.String"/>
+    <typed-object-ref name="creditStatus" type-ref="com.google.api.ads.dfp.axis.v201411.CompanyCreditStatus"/>
+    <typed-object-ref name="email" type-ref="java.lang.String"/>
+    <typed-object-ref name="enableSameAdvertiserCompetitiveExclusion" type-ref="java.lang.Boolean"/>
+    <typed-object-ref name="externalId" type-ref="java.lang.String"/>
+    <typed-object-ref name="faxPhone" type-ref="java.lang.String"/>
+    <typed-object-ref name="id" type-ref="java.lang.Long"/>
+    <typed-object-ref name="lastModifiedDateTime" type-ref="com.google.api.ads.dfp.axis.v201411.DateTime"/>
+    <typed-object-ref name="name" type-ref="java.lang.String"/>
+    <typed-object-ref name="primaryContactId" type-ref="java.lang.Long"/>
+    <typed-object-ref name="primaryPhone" type-ref="java.lang.String"/>
+    <typed-object-ref name="thirdPartyCompanyId" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="type" type-ref="com.google.api.ads.dfp.axis.v201411.CompanyType"/>
+  </typed-object>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.CompanyType"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.AppliedLabel">
+    <typed-object-ref name="isNegated" type-ref="java.lang.Boolean"/>
+    <typed-object-ref name="labelId" type-ref="java.lang.Long"/>
+  </typed-object>
+  <typed-object type="java.lang.Boolean"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.Date">
+    <typed-object-ref name="day" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="month" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="year" type-ref="java.lang.Integer"/>
+  </typed-object>
+  <typed-object type="java.lang.Long"/>
+  <typed-object type="java.lang.Integer"/>
+  <typed-object type="java.lang.String"/>
+  <typed-object type="long"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.CompanyCreditStatus"/>
+  <typed-object type="com.google.api.ads.dfp.axis.v201411.DateTime">
+    <typed-object-ref name="date" type-ref="com.google.api.ads.dfp.axis.v201411.Date"/>
+    <typed-object-ref name="hour" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="minute" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="second" type-ref="java.lang.Integer"/>
+    <typed-object-ref name="timeZoneID" type-ref="java.lang.String"/>
+  </typed-object>
+</schema-object>
+]]></attr>
+<attr name="__metadata"><![CDATA[true]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'appliedLabels' -&gt; 'appliedLabels'" guiX="460" guiY="120" id="FOREACH_APPLIED_LABELS_APPLIED_LABELS" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.isNegated = input.isNegated;
+output.labelId = input.labelId;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'object' -&gt; 'object'" guiX="460" guiY="20" id="FOREACH_OBJECT_OBJECT" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.address = input.address;
+output.appliedTeamIds = input.appliedTeamIds;
+output.comment = input.comment;
+output.email = input.email;
+output.enableSameAdvertiserCompetitiveExclusion = input.enableSameAdvertiserCompetitiveExclusion;
+output.externalId = input.externalId;
+output.faxPhone = input.faxPhone;
+output.id = input.id;
+output.day = input.day;
+output.month = input.month;
+output.year = input.year;
+output.hour = input.hour;
+output.minute = input.minute;
+output.second = input.second;
+output.timeZoneID = input.timeZoneID;
+output.name = inputArguments.inputName;
+output.primaryContactId = input.primaryContactId;
+output.primaryPhone = input.primaryPhone;
+output.thirdPartyCompanyId = input.thirdPartyCompanyId;
+]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="4ea718fe-e2da-4124-ad58-387f941e0f74" outPort="Port 0 (out)" toNode="FOREACH_OBJECT_OBJECT:0"/>
+<Edge debugMode="true" fromNode="BEAN_READER0:1" guiBendpoints="" id="Edge2" inPort="Port 0 (in)" metadata="313099fd-8bfc-4772-bef0-923564d32a64" outPort="Port 1 (out)" toNode="FOREACH_APPLIED_LABELS_APPLIED_LABELS:0"/>
+<Edge debugMode="true" fromNode="FOREACH_APPLIED_LABELS_APPLIED_LABELS:0" guiBendpoints="" id="Edge3" inPort="Port 1 (in)" metadata="33122e6a-7e11-4414-be07-ada6da4f72b0" outPort="Port 0 (out)" toNode="BEAN_WRITER0:1"/>
+<Edge debugMode="true" fromNode="FOREACH_OBJECT_OBJECT:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="85380ea8-4b48-4bc8-9f24-5f2c9d9626bb" outPort="Port 0 (out)" toNode="BEAN_WRITER0:0"/>
+</Phase>
+</Graph>
