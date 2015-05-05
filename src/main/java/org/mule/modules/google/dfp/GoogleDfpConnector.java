@@ -10,8 +10,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.cxf.common.util.StringUtils;
 import org.mule.api.annotations.Configurable;
 import org.mule.api.annotations.ConnectionStrategy;
 import org.mule.api.annotations.Connector;
@@ -69,7 +67,7 @@ public class GoogleDfpConnector {
 	 */
 	@Configurable
 	@Optional
-	private List<Long> customIds;
+	private List<String> customIds;
 
 	@PostConstruct
 	public void init() {
@@ -86,10 +84,17 @@ public class GoogleDfpConnector {
 		// Initialize and configure Report Service
 		reportService = new ReportService();
 
+		long[] customFieldIds = new long[customIds.size()];
+		
 		if (customIds != null) {
-			if (customIds.isEmpty()) {
-				Long[] ids = customIds.toArray(new Long[customIds.size()]);
-				long[] customFieldIds = ArrayUtils.toPrimitive(ids);
+			if (!customIds.isEmpty()) {
+				
+				for(int i=0;i<customIds.size();i++){
+					customFieldIds[i] = Long.parseLong(customIds.get(i));
+				}
+				
+//				Long[] ids = customIds.toArray(new Long[customIds.size()]);
+//				long[] customFieldIds = ArrayUtils.toPrimitive(ids);
 				reportService.setCustomFieldsIds(customFieldIds);
 			}
 		}
@@ -327,7 +332,7 @@ public class GoogleDfpConnector {
 	/**
 	 * @return list of custom IDs
 	 */
-	public List<Long> getCustomIds() {
+	public List<String> getCustomIds() {
 		return customIds;
 	}
 
@@ -335,7 +340,7 @@ public class GoogleDfpConnector {
 	 * @param customIds
 	 *            list of custom IDs
 	 */
-	public void setCustomIds(List<Long> customIds) {
+	public void setCustomIds(List<String> customIds) {
 		this.customIds = customIds;
 	}
 
