@@ -116,19 +116,15 @@ Create a global GoogleDFP configuration outside and above your flows, using the 
 		http://www.springframework.org/schema/util 
 		http://www.springframework.org/schema/util/spring-util.xsd">
  
-	<google-dfp:config name="Config Name"
-		clientId="client id"
-		clientSecret="client secret" applicationName="application name"
-		networkCode="network code" refreshToken="network code
-		doc:name="GoogleDfp: Config">
-		<google-dfp:custom-ids ref="customIds" />
-	</google-dfp:config>
-
-	<spring:beans>
-		<util:list id="customIds" value-type="java.lang.Long">
-			<spring:value>Custom ID</spring:value>
-		</util:list>
-	</spring:beans>
+	<google-dfp:config name="Google-Dfp" clientId="${api.dfp.clientId}" clientSecret="${api.dfp.clientSecret}"
+    			refreshToken="${api.dfp.refreshToken}" networkCode="${api.dfp.networkCode}"
+    			applicationName="${api.dfp.applicationName}" endpoint="${api.dfp.endpoint}"
+    			tokenServerUrl="${api.dfp.tokenServerUrl}" doc:name="GoogleDfp Authentication">
+    	<google-dfp:custom-ids>
+    		<google-dfp:custom-id>123</google-dfp:custom-id>
+    		<google-dfp:custom-id>456</google-dfp:custom-id>
+    	</google-dfp:custom-ids>
+    </google-dfp:config>
 		
 </mule>
 ----

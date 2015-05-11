@@ -9,8 +9,7 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
 import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
@@ -33,7 +32,7 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class CompanyService {
 
-	private Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger  = Logger.getLogger(CompanyService.class);
 
 	protected CompanyServiceInterface createCompanyService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
@@ -266,7 +265,7 @@ public class CompanyService {
 			Company createdCompany = companies[0];
 
 			logger.info(String
-					.format("A company with ID \"%d\", name \"%s\", and type \"%s\" was created.\n",
+					.format("A company with ID \"%d\", name \"%s\", and type \"%s\" was created.\"%n\"",
 							createdCompany.getId(), createdCompany.getName(),
 							createdCompany.getType()));
 
@@ -294,7 +293,7 @@ public class CompanyService {
 			Company updatedCompany = companies[0];
 
 			logger.info(String
-					.format("Company with ID \"%d\", name \"%s\", and comment \"%s\" was updated.\n",
+					.format("Company with ID \"%d\", name \"%s\", and comment \"%s\" was updated.\"%n\"",
 							updatedCompany.getId(), updatedCompany.getName(),
 							updatedCompany.getComment()));
 

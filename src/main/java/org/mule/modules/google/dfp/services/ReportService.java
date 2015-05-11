@@ -11,8 +11,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.rmi.RemoteException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.CreateReportException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 
@@ -33,7 +32,7 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class ReportService {
 
-	private Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = Logger.getLogger(ReportService.class);
 
 	// Set the ID of the custom field to include in the report.
 	private long[] customFieldsIds;
@@ -144,7 +143,6 @@ public class ReportService {
 			Thread reportDownloaderThread = new Thread() {
 				@Override
 				public void run() {
-					final Log logger = LogFactory.getLog(getClass());
 					try {
 						logger.info("Downloading report");
 						// Download the report.
@@ -152,7 +150,7 @@ public class ReportService {
 								pipedOutputStream);
 						logger.info("Downloading report complete");
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.debug("IO Exception", e);
 					}
 				}
 			};
@@ -161,14 +159,19 @@ public class ReportService {
 
 			return pipedInputStream;
 		} catch (ApiException e) {
+			logger.debug("API Exception", e);
 			throw new ReportDownloadException();
 		} catch (RemoteException e) {
+			logger.debug("Remote Exception", e);
 			throw new ReportDownloadException();
 		} catch (InterruptedException e) {
+			logger.debug("Interrupted Exception", e);
 			throw new ReportDownloadException();
 		} catch (IOException e) {
+			logger.debug("IO Exception", e);
 			throw new ReportDownloadException();
 		} catch (Exception e) {
+			logger.debug("Exception", e);
 			throw new ReportDownloadException();
 		}
 	}

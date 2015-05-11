@@ -84,21 +84,15 @@ public class GoogleDfpConnector {
 		// Initialize and configure Report Service
 		reportService = new ReportService();
 
-		long[] customFieldIds = new long[customIds.size()];
-		
-		if (customIds != null) {
-			if (!customIds.isEmpty()) {
-				
-				for(int i=0;i<customIds.size();i++){
-					customFieldIds[i] = Long.parseLong(customIds.get(i));
-				}
-				
-//				Long[] ids = customIds.toArray(new Long[customIds.size()]);
-//				long[] customFieldIds = ArrayUtils.toPrimitive(ids);
-				reportService.setCustomFieldsIds(customFieldIds);
-			}
-		}
+		if (customIds != null && !customIds.isEmpty()) {
+			long[] customFieldIds = new long[customIds.size()];
 
+			for (int i = 0; i < customIds.size(); i++) {
+				customFieldIds[i] = Long.parseLong(customIds.get(i));
+			}
+
+			reportService.setCustomFieldsIds(customFieldIds);
+		}
 
 		// Initialize and configure Company Service
 		companyService = new CompanyService();

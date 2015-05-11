@@ -9,8 +9,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
@@ -23,7 +22,7 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class ReconciliationReportService {
 
-	private Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger  = Logger.getLogger(ReconciliationReportService.class);
 
 	protected ReconciliationReportServiceInterface createReconciliationReportService(
 			DfpSession session) {
