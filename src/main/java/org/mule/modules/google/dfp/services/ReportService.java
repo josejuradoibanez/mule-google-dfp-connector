@@ -173,7 +173,7 @@ public class ReportService {
 							pipedOutputStream);
 					logger.info("Downloading report complete");
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Report download failed." , e);
 				}
 			}
 
@@ -187,7 +187,6 @@ public class ReportService {
 
 			public void onException(Exception e) {
 				logger.error("Report download failed.");
-				e.printStackTrace();
 			}
 		});
 
