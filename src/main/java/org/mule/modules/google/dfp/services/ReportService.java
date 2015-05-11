@@ -29,6 +29,7 @@ import com.google.api.ads.dfp.axis.v201411.ReportQuery;
 import com.google.api.ads.dfp.axis.v201411.ReportQueryAdUnitView;
 import com.google.api.ads.dfp.axis.v201411.ReportServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
+import com.google.api.ads.dfp.lib.utils.ReportCallback;
 
 public class ReportService {
 
@@ -43,15 +44,14 @@ public class ReportService {
 			Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.ADVERTISER_NAME,
 			Dimension.PROPOSAL_NAME, Dimension.PROPOSAL_AGENCY_NAME,
 			Dimension.MONTH_AND_YEAR, Dimension.RATE_CARD_ID,
-			Dimension.RATE_CARD_NAME,
-			Dimension.PROPOSAL_LINE_ITEM_NAME};
+			Dimension.RATE_CARD_NAME, Dimension.PROPOSAL_LINE_ITEM_NAME };
 
 	// Columns to include in the report
 	private static final Column[] columns = new Column[] {
 			Column.BILLING_LOCAL_BILLABLE_NET_REVENUE,
 			Column.RECONCILIATION_RECONCILED_REVENUE,
 			Column.RECONCILIATION_LAST_DATE_TIME,
-			Column.RECONCILIATION_RECONCILIATION_STATUS,};
+			Column.RECONCILIATION_RECONCILIATION_STATUS, };
 
 	// Dimension Attributes to include in the report
 	private static final DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] {
@@ -65,7 +65,7 @@ public class ReportService {
 			DimensionAttribute.LINE_ITEM_START_DATE_TIME,
 			DimensionAttribute.LINE_ITEM_END_DATE_TIME,
 			DimensionAttribute.PROPOSAL_LINE_ITEM_START_DATE_TIME,
-			DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME,};
+			DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME, };
 
 	protected ReportServiceInterface createReportService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
@@ -139,23 +139,7 @@ public class ReportService {
 				throw new ReportDownloadException();
 			}
 
-			// Download the report in a separate thread
-			Thread reportDownloaderThread = new Thread() {
-				@Override
-				public void run() {
-					try {
-						logger.info("Downloading report");
-						// Download the report.
-						reportDownloader.downloadReport(ExportFormat.CSV_DUMP,
-								pipedOutputStream);
-						logger.info("Downloading report complete");
-					} catch (IOException e) {
-						logger.debug("IO Exception", e);
-					}
-				}
-			};
-
-			reportDownloaderThread.start();
+			createDownloaderThread(reportDownloader, pipedOutputStream);
 
 			return pipedInputStream;
 		} catch (ApiException e) {
@@ -174,6 +158,39 @@ public class ReportService {
 			logger.debug("Exception", e);
 			throw new ReportDownloadException();
 		}
+	}
+
+	private void createDownloaderThread(
+			final ReportDownloader reportDownloader,
+			final PipedOutputStream pipedOutputStream) {
+		reportDownloader.whenReportReady(new ReportCallback() {
+			public void onSuccess() {
+				try {
+
+					logger.info("Downloading report");
+					// Download the report.
+					reportDownloader.downloadReport(ExportFormat.CSV_DUMP,
+							pipedOutputStream);
+					logger.info("Downloading report complete");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			public void onInterruption() {
+				logger.error("Report download interupted.");
+			}
+
+			public void onFailure() {
+				logger.error("Report download failed.");
+			}
+
+			public void onException(Exception e) {
+				logger.error("Report download failed.");
+				e.printStackTrace();
+			}
+		});
+
 	}
 
 	public long[] getCustomFieldsIds() {
