@@ -4,7 +4,7 @@ Google-DFP Company Service Demo
 INTRODUCTION
 ------------
 
-This demo shows how you can first 
+This demo shows how you can use the get-agency-by-name and update-company operations to update a Company in Google DFP.
 
 HOW TO RUN DEMO
 ---------------
@@ -24,8 +24,15 @@ From the Package Explorer view, navigate to src/main/resources and open demo.pro
 
 Note that the Google-DFP connector library may not have been added automatically to the project build path. To add the library, open the Mule Flow, right-click on a Google-DFP connector on the flow and click 'Add GoogleDFP libraries to the project'.
 
-### Running the Demo
+### Running the Create Company Demo
+
+Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/createCompany**.
+
+Congratulations, your company has been created!
+
+### Running the Update Company Demo
 
 Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/updateCompany?name=\<oldCompanyName\>&newname=\<newCompanyName\>**.
 
 Congratulations, your company has been updated!
+

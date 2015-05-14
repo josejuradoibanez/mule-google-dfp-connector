@@ -25,7 +25,18 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 		host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration" />
     <data-mapper:config name="Pojo_To_Company" transformationGraphPath="pojo_to_company.grf" doc:name="Pojo_To_Company"/>
 
-	<flow name="googledemoFlow">
+	<flow name="createCompanyFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration"
+			path="/createCompany" doc:name="HTTP" allowedMethods="GET" />
+
+		<custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany"
+			doc:name="Create Google Company" />
+        <google-dfp:create-company config-ref="GoogleDfp__Authentication" doc:name="Create GoogleDfp Company">
+            <google-dfp:company ref="#[payload]"/>
+        </google-dfp:create-company>
+	</flow>
+
+	<flow name="updateCompanyFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
 			path="/updateCompany" doc:name="HTTP" allowedMethods="PUT" />
 		<set-session-variable variableName="newname"

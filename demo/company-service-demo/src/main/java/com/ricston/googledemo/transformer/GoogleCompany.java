@@ -20,7 +20,7 @@ public class GoogleCompany extends AbstractMessageTransformer {
 			throws TransformerException {
 		
 		Company newCompany = new Company();
-		newCompany.setName("DFP");
+		newCompany.setName("MuleTest");
 		newCompany.setAddress("Mosta, Malta");
 		newCompany.setType(CompanyType.AGENCY);
 		newCompany.setEmail("googledfp@ricston.com");
