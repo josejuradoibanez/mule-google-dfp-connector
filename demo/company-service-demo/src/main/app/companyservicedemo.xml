@@ -27,7 +27,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 
 	<flow name="createCompanyFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
-			path="/createCompany" doc:name="HTTP" allowedMethods="GET" />
+			path="/createCompany" doc:name="HTTP" allowedMethods="PUT" />
 
 		<custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany"
 			doc:name="Create Google Company" />
