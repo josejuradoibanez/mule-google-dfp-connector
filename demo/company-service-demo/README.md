@@ -4,7 +4,7 @@ Google-DFP Company Service Demo
 INTRODUCTION
 ------------
 
-This demo shows how you can use the get-agency-by-name and update-company operations to update a Company in Google DFP.
+This demo shows how you can use the create-company, get-agency-by-name and update-company operations to create/update a Company in Google DFP.
 
 HOW TO RUN DEMO
 ---------------
@@ -26,13 +26,13 @@ Note that the Google-DFP connector library may not have been added automatically
 
 ### Running the Create Company Demo
 
-Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/createCompany**.
+Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/createCompany?name=\<companyName\>** by sending a PUT request.
 
 Congratulations, your company has been created!
 
 ### Running the Update Company Demo
 
-Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/updateCompany?name=\<oldCompanyName\>&newname=\<newCompanyName\>**.
+Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/updateCompany?name=\<oldCompanyName\>&newname=\<newCompanyName\>** by sending a PUT request.
 
 Congratulations, your company has been updated!
 

@@ -3,8 +3,9 @@
  * a copy of which has been included with this distribution in the LICENSE.md file.
  */
 
-
 package com.ricston.googledemo.transformer;
+
+import java.util.Map;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
@@ -19,10 +20,13 @@ public class GoogleCompany extends AbstractMessageTransformer {
 	public Object transformMessage(MuleMessage message, String outputEncoding)
 			throws TransformerException {
 		
+		Map queryParams = message.getInboundProperty("http.query.params");
+		String name = (String) queryParams.get("name");
+		
 		Company newCompany = new Company();
-		newCompany.setName("MuleTest");
+		newCompany.setName(name);
 		newCompany.setAddress("Mosta, Malta");
-		newCompany.setType(CompanyType.AGENCY);
+		newCompany.setType(CompanyType.ADVERTISER);
 		newCompany.setEmail("googledfp@ricston.com");
 
 		message.setPayload(newCompany);
