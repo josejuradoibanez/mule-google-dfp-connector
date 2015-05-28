@@ -13,12 +13,12 @@
 		<entry key="StartDateRef" value-ref="createReport_StartDate" />
 		<entry key="EndDateRef" value-ref="createReport_EndDate" />
 	</util:map>
-	<bean class="com.google.api.ads.dfp.axis.v201411.Date" id="createReport_StartDate">
+	<bean class="com.google.api.ads.dfp.axis.v201505.Date" id="createReport_StartDate">
 		<property name="day" value="1" />
 		<property name="month" value="2" />
 		<property name="year" value="2015" />
 	</bean>
-	<bean class="com.google.api.ads.dfp.axis.v201411.Date" id="createReport_EndDate">
+	<bean class="com.google.api.ads.dfp.axis.v201505.Date" id="createReport_EndDate">
 		<property name="day" value="1" />
 		<property name="month" value="4" />
 		<property name="year" value="2015" />
@@ -41,7 +41,7 @@
 		map-class="java.util.HashMap" scope="prototype" value-type="java.lang.Object">
 		<entry key="company" value-ref="createCompany_Company" />
 	</util:map>
-	<bean class="com.google.api.ads.dfp.axis.v201411.Company" id="createCompany_Company">
+	<bean class="com.google.api.ads.dfp.axis.v201505.Company" id="createCompany_Company">
 		<property name="name" value="Ricston Ltd" />
 		<property name="address" value="Mosta, Malta" />
 		<property name="email" value="ops@ricston.com" />

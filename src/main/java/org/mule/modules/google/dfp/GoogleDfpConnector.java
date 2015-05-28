@@ -36,10 +36,10 @@ import org.mule.modules.google.dfp.services.ReconciliationReportService;
 import org.mule.modules.google.dfp.services.ReportService;
 import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 
-import com.google.api.ads.dfp.axis.v201411.Company;
-import com.google.api.ads.dfp.axis.v201411.Date;
-import com.google.api.ads.dfp.axis.v201411.ReconciliationReportRow;
-import com.google.api.ads.dfp.axis.v201411.ReportJob;
+import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201505.Date;
+import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
+import com.google.api.ads.dfp.axis.v201505.ReportJob;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 /**

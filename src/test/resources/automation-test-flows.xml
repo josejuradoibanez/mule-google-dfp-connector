@@ -14,17 +14,11 @@ http://www.mulesoft.org/schema/mule/google-dfp http://www.mulesoft.org/schema/mu
 
 	<context:property-placeholder location="automation-credentials.properties" />
 
-	<spring:beans>
-		<util:list id="myList" value-type="java.lang.Long" />
-	</spring:beans>
-
 	<google-dfp:config tokenServerUrl="${google-dfp.tokenServerUrl}"
 		networkCode="${google-dfp.networkCode}" applicationName="${google-dfp.applicationName}"
 		refreshToken="${google-dfp.refreshToken}" clientSecret="${google-dfp.clientSecret}"
 		clientId="${google-dfp.clientId}" endpoint="${google-dfp.endpoint}"
-		name="Google-dfp" doc:name="Google-dfp">
-		<google-dfp:custom-ids ref="myList" />
-	</google-dfp:config>
+		name="Google-dfp" doc:name="Google-dfp"/>
 
 	<flow name="create-report" doc:name="CreateReport">
 		<google-dfp:create-report config-ref="Google-dfp">
