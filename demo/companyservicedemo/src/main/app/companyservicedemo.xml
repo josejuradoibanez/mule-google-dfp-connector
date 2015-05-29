@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:spring="http://www.springframework.org/schema/beans"
+	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:google-dfp="http://www.mulesoft.org/schema/mule/google-dfp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	version="EE-3.6.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/google-dfp http://www.mulesoft.org/schema/mule/google-dfp/current/mule-google-dfp.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+
+	<context:property-placeholder location="demo.properties" />
+
+	<google-dfp:config name="GoogleDfp__Authentication"
+		clientId="${google-dfp.clientId}" clientSecret="${google-dfp.clientSecret}"
+		refreshToken="${google-dfp.refreshToken}" networkCode="${google-dfp.networkCode}"
+		applicationName="${google-dfp.applicationName}" endpoint="${google-dfp.endpoint}"
+		tokenServerUrl="${google-dfp.tokenServerUrl}" doc:name="GoogleDfp">
+	</google-dfp:config>
+
+	<http:listener-config name="HTTP_Listener_Configuration"
+		host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration" />
+	<data-mapper:config name="Pojo_To_Company"
+		transformationGraphPath="pojo_to_company_1.grf" doc:name="Pojo_To_Company" />
+	
+	<flow name="createCompanyFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration"
+			path="/createCompany" doc:name="HTTP" allowedMethods="PUT" />
+		<custom-transformer class="com.ricston.googledemo.transformer.GoogleCompany"
+			doc:name="Create Google Company" />
+		<google-dfp:create-company config-ref="GoogleDfp__Authentication"
+			doc:name="Create GoogleDfp Company">
+			<google-dfp:company ref="#[payload]" />
+		</google-dfp:create-company>
+	</flow>
+
+	<flow name="updateCompanyFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration"
+			path="/updateCompany" doc:name="HTTP" allowedMethods="PUT" />
+		<set-session-variable variableName="newname"
+			value="#[message.inboundProperties.'http.query.params'.newname]"
+			doc:name="Store name" />
+		<google-dfp:get-agency-by-name
+			config-ref="GoogleDfp__Authentication" agencyName="#[message.inboundProperties.'http.query.params'.name]"
+			doc:name="Get Agency" />
+		<choice doc:name="Choice">
+			<when
+				expression="#[payload instanceof com.google.api.ads.dfp.axis.v201505.Company]">
+				<data-mapper:transform config-ref="Pojo_To_Company"
+					doc:name="Pojo To Company" />
+				<google-dfp:update-company config-ref="GoogleDfp__Authentication"
+					doc:name="GoogleDfp">
+					<google-dfp:company ref="#[payload]" />
+				</google-dfp:update-company>
+			</when>
+			<otherwise>
+				<logger level="INFO" message="No company to update" doc:name="Logger" />
+			</otherwise>
+		</choice>
+	</flow>
+
+</mule>
