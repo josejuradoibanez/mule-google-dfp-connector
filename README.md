@@ -21,7 +21,7 @@ We use GitHub:Issues for tracking issues with this connector. You can report new
 
 # Support Resources
 
-* Visit [DFP API documentation](https://developers.google.com/doubleclick-publishers/docs/reference/v201411/ActivityGroupService) page for information on DFP v201411 API.
+* Visit [DFP API release notes](https://developers.google.com/doubleclick-publishers/docs/rel_notes) page for information on DFP v201505 API.
 * Learn how to [Install and Configure Anypoint Connectors](http://www.mulesoft.org/documentation/display/current/Connectors+User+Guide) in Anypoint Studio.
 * Access MuleSoft's [forum](http://forum.mulesoft.org/mulesoft) to pose questions and get help from Mule's broad community of users.
 * To access MuleSoft's expert support team, [subscribe](http://www.mulesoft.com/support-and-services/mule-esb-support-license-subscription) to Mule ESB Enterprise and log into MuleSoft [Customer Portal](http://www.mulesoft.com/support-login). 

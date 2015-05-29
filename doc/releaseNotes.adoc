@@ -3,7 +3,7 @@
 :Connector_Version: v1.0.0
 :Connector_Guide_Url: github_link_doc
 :Supported_Mule_Version: 3.6.1
-:System_Version: v201411
+:System_Version: v201505
 
 == {System_Name} Connector Release Notes
 === {Release_date}
@@ -53,7 +53,7 @@ The {System_name} connector is compatible with:
 
 === Support Resources
 
-. Visit https://developers.google.com/doubleclick-publishers/docs/reference/v201411/ActivityGroupService[DFP API documentation] page for information on DFP v201411 API.
+. Visit https://developers.google.com/doubleclick-publishers/docs/rel_notes[DFP API release notes] page for information on DFP v201505 API.
 . Learn how to Install and Configure Anypoint™ Connectors in Anypoint™ Studio http://www.mulesoft.org/documentation/display/current/Installing+Connectors[here].
 . Access MuleSoft’s http://forum.mulesoft.org/mulesoft[MuleForge forum] to pose questions and get help from Mule’s broad community of users.
 . To access MuleSoft’s expert support team, https://www.mulesoft.com/platform/soa/mule-esb-open-source-esb[subscribe] to Mule ESB Enterprise and log in to MuleSoft’s https://www.mulesoft.com/support-login[Customer Portal].
