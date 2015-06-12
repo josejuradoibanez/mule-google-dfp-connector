@@ -7,15 +7,20 @@ package org.mule.modules.google.dfp;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
 import org.mule.api.annotations.Configurable;
 import org.mule.api.annotations.ConnectionStrategy;
 import org.mule.api.annotations.Connector;
+import org.mule.api.annotations.MetaDataScope;
 import org.mule.api.annotations.Processor;
+import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.lifecycle.Start;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.MetaDataKeyParam;
+import org.mule.api.annotations.param.MetaDataKeyParamAffectsType;
 import org.mule.api.annotations.param.Optional;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
 import org.mule.modules.google.dfp.exceptions.CreateReportException;
@@ -38,6 +43,7 @@ import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 
 import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.Date;
+import com.google.api.ads.dfp.axis.v201505.Dimension;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
 import com.google.api.ads.dfp.lib.client.DfpSession;
@@ -50,6 +56,7 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
  * 
  * @author Ricston, Ltd.
  */
+@MetaDataScope(DimensionCategory.class)
 @Connector(name = "google-dfp", schemaVersion = "1.0", friendlyName = "GoogleDfp")
 public class GoogleDfpConnector {
 
@@ -103,6 +110,26 @@ public class GoogleDfpConnector {
 		// Initialize and configure reconciliation report row service
 		reconciliationReportRowService = new ReconciliationReportRowService();
 	}
+	
+	@Processor
+	public Object myCreate(@MetaDataKeyParam(affects=MetaDataKeyParamAffectsType.BOTH) String dimension, Map<String, Object> entityData) {
+		if ("id1".equals(dimension)) {
+	        return new DimensionType();
+	    }
+	    if ("id2".equals(dimension)) {
+	        return new DimensionType();
+	    }
+	    throw new RuntimeException("Entity not recognized");
+	}
+	
+	@Processor
+	public void processor2(@Placement(group="List of Dimensions") List<Dimension> dimensions,
+			@Placement(group="List of Enums") List<DimensionEnum> enums,
+			@Placement(group="List of Dimension Types") @Default("#[payload]") List<DimensionType> types,
+			@Placement(tab="1", group="Dimension") DimensionType type) {
+		
+	}
+	
 
 	/**
 	 * Creates a report given a date range
