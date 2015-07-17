@@ -11,38 +11,37 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.mule.api.MuleEvent;
-import org.mule.modules.google.dfp.automation.GoogleDfpTestParent;
-import org.mule.modules.google.dfp.automation.RegressionTests;
-import org.mule.modules.google.dfp.automation.SmokeTests;
+import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
+import org.mule.tools.devkit.ctf.junit.RegressionTests;
 
 import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.CompanyType;
 
-public class CreateCompanyTestCases extends GoogleDfpTestParent {
+public class CreateCompanyTestCases extends AbstractTestCase {
 
-	Company newCompany;
+    Company newCompany;
 
-	@Before
-	public void setup() throws Exception {
-		newCompany = new Company();
-		newCompany.setName("Ricston Ltd");
-		newCompany.setAddress("Mosta Malta");
-		newCompany.setEmail("dfp@ricston.com");
-		newCompany.setType(CompanyType.AGENCY);
-	}
+    @Before
+    public void setup() throws Exception {
+        newCompany = new Company();
+        newCompany.setName("Ricston Ltd");
+        newCompany.setAddress("Mosta Malta");
+        newCompany.setEmail("dfp@ricston.com");
+        newCompany.setType(CompanyType.AGENCY);
+    }
 
-	@Category({ RegressionTests.class, SmokeTests.class })
-	@Test
-	@Ignore
-	public void testCreateCompany() throws Exception {
-		MuleEvent response = runFlow("create-company", newCompany);
-		Assert.assertNotNull(response);
-		Assert.assertNotNull(response.getMessage());
-		Assert.assertNotNull(response.getMessage().getPayload());
-		Assert.assertTrue(response.getMessage().getPayload() instanceof Company);
-
-		Company createdCompany = (Company) response.getMessage().getPayload();
-		Assert.assertEquals(newCompany.getName(), createdCompany.getName());
-	}
+    @Category({ RegressionTests.class })
+    @Test
+    @Ignore
+    public void testCreateCompany() throws Exception {
+//        MuleEvent response = runFlow("create-company", newCompany);
+//        Assert.assertNotNull(response);
+//        Assert.assertNotNull(response.getMessage());
+//        Assert.assertNotNull(response.getMessage().getPayload());
+//        Assert.assertTrue(response.getMessage().getPayload() instanceof Company);
+//
+//        Company createdCompany = (Company) response.getMessage().getPayload();
+//        Assert.assertEquals(newCompany.getName(), createdCompany.getName());
+    }
 
 }

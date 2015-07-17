@@ -10,6 +10,10 @@
 
 package org.mule.modules.google.dfp.strategy;
 
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.mule.api.ConnectionException;
 import org.mule.api.ConnectionExceptionCode;
 import org.mule.api.annotations.Configurable;
@@ -21,9 +25,14 @@ import org.mule.api.annotations.TestConnectivity;
 import org.mule.api.annotations.ValidateConnection;
 import org.mule.api.annotations.components.ConnectionManagement;
 import org.mule.api.annotations.display.Password;
+import org.mule.api.annotations.lifecycle.Start;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
+import org.mule.modules.google.dfp.services.CompanyService;
+import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
+import org.mule.modules.google.dfp.services.ReconciliationReportService;
+import org.mule.modules.google.dfp.services.ReportService;
 
 import com.google.api.ads.common.lib.auth.OfflineCredentials;
 import com.google.api.ads.common.lib.auth.OfflineCredentials.Api;
@@ -40,202 +49,288 @@ import com.google.api.client.auth.oauth2.Credential;
 @ConnectionManagement(friendlyName = "Config")
 public class GoogleDfpConnectionStrategy {
 
-	private DfpSession session;
+    private DfpSession session;
+    private ReportService reportService;
+    private CompanyService companyService;
+    private ReconciliationReportService reconciliationReportService;
+    private ReconciliationReportRowService reconciliationReportRowService;
 
-	/**
-	 * The refresh token for Google DFP
-	 */
-	@Configurable
-	@Required
-	private String refreshToken;
+    /**
+     * The refresh token for Google DFP
+     */
+    @Configurable
+    @Required
+    private String refreshToken;
 
-	/**
-	 * The token server URL for Google DFP
-	 */
-	@Configurable
-	@Optional
-	@Default(value = "https://accounts.google.com/o/oauth2/token")
-	private String tokenServerUrl;
+    /**
+     * The token server URL for Google DFP
+     */
+    @Configurable
+    @Optional
+    @Default(value = "https://accounts.google.com/o/oauth2/token")
+    private String tokenServerUrl;
 
-	/**
-	 * The application name for Google DFP
-	 */
-	@Configurable
-	@Required
-	private String applicationName;
+    /**
+     * The application name for Google DFP
+     */
+    @Configurable
+    @Required
+    private String applicationName;
 
-	/**
-	 * The endpoint for Google DFP
-	 */
-	@Configurable
-	@Optional
-	@Default(value = "https://ads.google.com/")
-	private String endpoint;
+    /**
+     * The endpoint for Google DFP
+     */
+    @Configurable
+    @Optional
+    @Default(value = "https://ads.google.com/")
+    private String endpoint;
 
-	/**
-	 * The network code for Google DFP
-	 */
-	@Configurable
-	@Required
-	private String networkCode;
+    /**
+     * The network code for Google DFP
+     */
+    @Configurable
+    @Required
+    private String networkCode;
 
-	/**
-	 * Connect
-	 * 
-	 * @param clientId
-	 *            The client Id
-	 * @param clientSecret
-	 *            The client secret
-	 * @throws ConnectionException
-	 */
-	@Connect
-	@TestConnectivity(label = "Test Connection")
-	public void connect(@ConnectionKey String clientId,
-			@Password String clientSecret) throws ConnectionException {
-		try {
+    /**
+     * List of custom IDs
+     */
+    @Configurable
+    @Optional
+    private List<String> customIds;
+    
+    /**
+     * Initialize all the Google DFP services. Once initialize, each service is configured if necessary.
+     */
+    @Start
+    public void initialiseAndConfigureServices() {
 
-			/*
-			 * Generate a refreshable OAuth2 credential similar to a ClientLogin
-			 * token and can be used in place of a service account.
-			 */
-			Credential oAuth2Credential = new OfflineCredentials.Builder()
-					.forApi(Api.DFP).withClientSecrets(clientId, clientSecret)
-					.withRefreshToken(refreshToken)
-					.withTokenUrlServer(tokenServerUrl).build()
-					.generateCredential();
+        // Initialize and configure Report Service
+        reportService = new ReportService();
 
-			/*
-			 * Construct a DfpSession.
-			 */
-			session = new DfpSession.Builder()
-					.withApplicationName(applicationName)
-					.withEndpoint(endpoint)
-					.withOAuth2Credential(oAuth2Credential)
-					.withNetworkCode(networkCode).build();
-		} catch (OAuthException e) {
-			throw new ConnectionException(
-					ConnectionExceptionCode.INCORRECT_CREDENTIALS, "001",
-					e.getMessage(), e);
-		} catch (ValidationException e) {
-			throw new ConnectionException(ConnectionExceptionCode.UNKNOWN,
-					"002", e.getMessage(), e);
-		}
-	}
+        if (customIds != null && !customIds.isEmpty()) {
+            long[] customFieldIds = new long[customIds.size()];
 
-	
-	
-	/**
-	 * Disconnect
-	 */
-	@Disconnect
-	public void disconnect() {
-		session = null;
-	}
+            for (int i = 0; i < customIds.size(); i++) {
+                customFieldIds[i] = Long.parseLong(customIds.get(i));
+            }
 
-	/**
-	 * Are we connected
-	 */
-	@ValidateConnection
-	public boolean isConnected() {
-		return session != null;
-	}
+            reportService.setCustomFieldsIds(customFieldIds);
+        }
 
-	/**
-	 * Are we connected
-	 */
-	@ConnectionIdentifier
-	public String connectionId() {
-		return "001";
-	}
+        // Initialize and configure Company Service
+        companyService = new CompanyService();
 
-	/**
-	 * @return The DFP session
-	 */
-	public DfpSession getSession() {
-		return session;
-	}
+        // Initialize and configure reconciliation report service
+        reconciliationReportService = new ReconciliationReportService();
 
-	/**
-	 * @param session
-	 *            The DFP session
-	 */
-	public void setSession(DfpSession session) {
-		this.session = session;
-	}
+        // Initialize and configure reconciliation report row service
+        reconciliationReportRowService = new ReconciliationReportRowService();
+    }
 
-	/**
-	 * @return The refresh token for Google DFP
-	 */
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+    // testing without...
+//    @PostConstruct
+//    public void init() {
+//        session = getSession();
+//    }
 
-	/**
-	 * @param refreshToken
-	 *            The refresh token for Google DFP
-	 */
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+    /**
+     * Connect
+     * 
+     * @param clientId
+     *            The client Id
+     * @param clientSecret
+     *            The client secret
+     * @throws ConnectionException
+     */
+    @Connect
+    @TestConnectivity(label = "Test Connection")
+    public void connect(@ConnectionKey String clientId, @Password String clientSecret) throws ConnectionException {
+        try {
 
-	/**
-	 * @return The token server URL for Google DFP
-	 */
-	public String getTokenServerUrl() {
-		return tokenServerUrl;
-	}
+            /*
+             * Generate a refreshable OAuth2 credential similar to a ClientLogin token and can be used in place of a service account.
+             */
+            Credential oAuth2Credential = new OfflineCredentials.Builder().forApi(Api.DFP).withClientSecrets(clientId, clientSecret).withRefreshToken(refreshToken)
+                    .withTokenUrlServer(tokenServerUrl).build().generateCredential();
 
-	/**
-	 * @param tokenServerUrl
-	 *            The token server URL for Google DFP
-	 */
-	public void setTokenServerUrl(String tokenServerUrl) {
-		this.tokenServerUrl = tokenServerUrl;
-	}
+            /*
+             * Construct a DfpSession.
+             */
+            session = new DfpSession.Builder().withApplicationName(applicationName).withEndpoint(endpoint).withOAuth2Credential(oAuth2Credential).withNetworkCode(networkCode)
+                    .build();
+        } catch (OAuthException e) {
+            throw new ConnectionException(ConnectionExceptionCode.INCORRECT_CREDENTIALS, "001", e.getMessage(), e);
+        } catch (ValidationException e) {
+            throw new ConnectionException(ConnectionExceptionCode.UNKNOWN, "002", e.getMessage(), e);
+        }
+    }
 
-	/**
-	 * @return The application name for Google DFP
-	 */
-	public String getApplicationName() {
-		return applicationName;
-	}
+    /**
+     * Disconnect
+     */
+    @Disconnect
+    public void disconnect() {
+        session = null;
+    }
 
-	/**
-	 * @param applicationName
-	 *            The application name for Google DFP
-	 */
-	public void setApplicationName(String applicationName) {
-		this.applicationName = applicationName;
-	}
+    /**
+     * Are we connected
+     */
+    @ValidateConnection
+    public boolean isConnected() {
+        return session != null;
+    }
 
-	/**
-	 * @return The endpoint for Google DFP
-	 */
-	public String getEndpoint() {
-		return endpoint;
-	}
+    /**
+     * Are we connected
+     */
+    @ConnectionIdentifier
+    public String connectionId() {
+        return "001";
+    }
 
-	/**
-	 * @param endpoint
-	 *            The endpoint for Google DFP
-	 */
-	public void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
-	}
+    /**
+     * @return The DFP session
+     */
+    public DfpSession getSession() {
+        return session;
+    }
 
-	/**
-	 * 
-	 * @return The network code for Google DFP
-	 */
-	public String getNetworkCode() {
-		return networkCode;
-	}
+    /**
+     * @param session
+     *            The DFP session
+     */
+    public void setSession(DfpSession session) {
+        this.session = session;
+    }
+    
+    
+    public ReportService getReportService() {
+        return reportService;
+    }
+    
 
-	/**
-	 * @param networkCode
-	 *            The network code for Google DFP
-	 */
-	public void setNetworkCode(String networkCode) {
-		this.networkCode = networkCode;
-	}
+    
+    public void setReportService(ReportService reportService) {
+        this.reportService = reportService;
+    }
+    
+
+    
+    public CompanyService getCompanyService() {
+        return companyService;
+    }
+    
+
+    
+    public void setCompanyService(CompanyService companyService) {
+        this.companyService = companyService;
+    }
+    
+
+    public ReconciliationReportService getReconciliationReportService() {
+        return reconciliationReportService;
+    }
+
+    
+    public void setReconciliationReportService(ReconciliationReportService reconciliationReportService) {
+        this.reconciliationReportService = reconciliationReportService;
+    }
+
+    
+    public ReconciliationReportRowService getReconciliationReportRowService() {
+        return reconciliationReportRowService;
+    }
+
+    
+    public void setReconciliationReportRowService(ReconciliationReportRowService reconciliationReportRowService) {
+        this.reconciliationReportRowService = reconciliationReportRowService;
+    }
+
+    
+    public List<String> getCustomIds() {
+        return customIds;
+    }
+
+    
+    public void setCustomIds(List<String> customIds) {
+        this.customIds = customIds;
+    }
+
+    /**
+     * @return The refresh token for Google DFP
+     */
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    /**
+     * @param refreshToken
+     *            The refresh token for Google DFP
+     */
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    /**
+     * @return The token server URL for Google DFP
+     */
+    public String getTokenServerUrl() {
+        return tokenServerUrl;
+    }
+
+    /**
+     * @param tokenServerUrl
+     *            The token server URL for Google DFP
+     */
+    public void setTokenServerUrl(String tokenServerUrl) {
+        this.tokenServerUrl = tokenServerUrl;
+    }
+
+    /**
+     * @return The application name for Google DFP
+     */
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    /**
+     * @param applicationName
+     *            The application name for Google DFP
+     */
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    /**
+     * @return The endpoint for Google DFP
+     */
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    /**
+     * @param endpoint
+     *            The endpoint for Google DFP
+     */
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    /**
+     * 
+     * @return The network code for Google DFP
+     */
+    public String getNetworkCode() {
+        return networkCode;
+    }
+
+    /**
+     * @param networkCode
+     *            The network code for Google DFP
+     */
+    public void setNetworkCode(String networkCode) {
+        this.networkCode = networkCode;
+    }
 }
