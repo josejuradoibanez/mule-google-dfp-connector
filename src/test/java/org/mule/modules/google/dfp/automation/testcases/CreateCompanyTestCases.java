@@ -15,8 +15,8 @@ import org.mule.modules.google.dfp.automation.GoogleDfpTestParent;
 import org.mule.modules.google.dfp.automation.RegressionTests;
 import org.mule.modules.google.dfp.automation.SmokeTests;
 
-import com.google.api.ads.dfp.axis.v201411.Company;
-import com.google.api.ads.dfp.axis.v201411.CompanyType;
+import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201505.CompanyType;
 
 public class CreateCompanyTestCases extends GoogleDfpTestParent {
 

@@ -35,4 +35,3 @@ Congratulations, your company has been created!
 Run the demo as a Mule Application and in your browser hit this endpoint: **http://localhost:8081/updateCompany?name=\<oldCompanyName\>&newname=\<newCompanyName\>** by sending a PUT request.
 
 Congratulations, your company has been updated!
-

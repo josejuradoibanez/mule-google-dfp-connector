@@ -16,7 +16,7 @@ import org.mule.api.MuleEvent;
 import org.mule.modules.google.dfp.automation.GoogleDfpTestParent;
 import org.mule.modules.google.dfp.automation.RegressionTests;
 
-import com.google.api.ads.dfp.axis.v201411.ReportJob;
+import com.google.api.ads.dfp.axis.v201505.ReportJob;
 
 public class DownloadReportTestCases extends GoogleDfpTestParent {
 

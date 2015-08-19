@@ -16,7 +16,7 @@ import org.mule.modules.google.dfp.automation.GoogleDfpTestParent;
 import org.mule.modules.google.dfp.automation.RegressionTests;
 import org.mule.transport.NullPayload;
 
-import com.google.api.ads.dfp.axis.v201411.Company;
+import com.google.api.ads.dfp.axis.v201505.Company;
 
 public class GetCompanyByIdTestCases extends GoogleDfpTestParent {
 

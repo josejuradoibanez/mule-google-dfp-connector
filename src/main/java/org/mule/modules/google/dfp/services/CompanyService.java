@@ -22,12 +22,12 @@ import org.mule.modules.google.dfp.exceptions.TooManyCompaniesFoundException;
 import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201411.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201411.ApiException;
-import com.google.api.ads.dfp.axis.v201411.Company;
-import com.google.api.ads.dfp.axis.v201411.CompanyPage;
-import com.google.api.ads.dfp.axis.v201411.CompanyServiceInterface;
-import com.google.api.ads.dfp.axis.v201411.CompanyType;
+import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201505.ApiException;
+import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201505.CompanyPage;
+import com.google.api.ads.dfp.axis.v201505.CompanyServiceInterface;
+import com.google.api.ads.dfp.axis.v201505.CompanyType;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class CompanyService {

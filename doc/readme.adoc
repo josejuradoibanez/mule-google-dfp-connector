@@ -13,7 +13,7 @@ Ricston Ltd.
 Mule {mule_version}
 
 == Google DFP supported versions
-Google DFP v201411
+Google DFP v201505
 
 == The DFP connector supports the following modules:
 *Company Service*:

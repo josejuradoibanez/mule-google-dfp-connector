@@ -44,7 +44,7 @@ Supported Mule Runtime Versions: 3.6+
 
 === Compatibility Matrix
 
-Supported API versions: Google DFP v201411
+Supported API versions: Google DFP v201505
 
 ---
 
@@ -189,8 +189,8 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageTransformer;
 
-import com.google.api.ads.dfp.axis.v201411.Company;
-import com.google.api.ads.dfp.axis.v201411.CompanyType;
+import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201505.CompanyType;
 
 public class GoogleCompany extends AbstractMessageTransformer {
 
@@ -324,8 +324,8 @@ import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
 import org.mule.transformer.AbstractMessageTransformer;
 
-import com.google.api.ads.dfp.axis.v201411.Company;
-import com.google.api.ads.dfp.axis.v201411.CompanyType;
+import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201505.CompanyType;
 
 public class GoogleCompany extends AbstractMessageTransformer {
 

@@ -16,18 +16,18 @@ import org.mule.modules.google.dfp.exceptions.CreateReportException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201411.ReportDownloader;
-import com.google.api.ads.dfp.axis.v201411.ApiException;
-import com.google.api.ads.dfp.axis.v201411.Column;
-import com.google.api.ads.dfp.axis.v201411.Date;
-import com.google.api.ads.dfp.axis.v201411.DateRangeType;
-import com.google.api.ads.dfp.axis.v201411.Dimension;
-import com.google.api.ads.dfp.axis.v201411.DimensionAttribute;
-import com.google.api.ads.dfp.axis.v201411.ExportFormat;
-import com.google.api.ads.dfp.axis.v201411.ReportJob;
-import com.google.api.ads.dfp.axis.v201411.ReportQuery;
-import com.google.api.ads.dfp.axis.v201411.ReportQueryAdUnitView;
-import com.google.api.ads.dfp.axis.v201411.ReportServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201505.ReportDownloader;
+import com.google.api.ads.dfp.axis.v201505.ApiException;
+import com.google.api.ads.dfp.axis.v201505.Column;
+import com.google.api.ads.dfp.axis.v201505.Date;
+import com.google.api.ads.dfp.axis.v201505.DateRangeType;
+import com.google.api.ads.dfp.axis.v201505.Dimension;
+import com.google.api.ads.dfp.axis.v201505.DimensionAttribute;
+import com.google.api.ads.dfp.axis.v201505.ExportFormat;
+import com.google.api.ads.dfp.axis.v201505.ReportJob;
+import com.google.api.ads.dfp.axis.v201505.ReportQuery;
+import com.google.api.ads.dfp.axis.v201505.ReportQueryAdUnitView;
+import com.google.api.ads.dfp.axis.v201505.ReportServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.ads.dfp.lib.utils.ReportCallback;
 
@@ -140,7 +140,7 @@ public class ReportService {
 			}
 
 			createDownloaderThread(reportDownloader, pipedOutputStream);
-
+			
 			return pipedInputStream;
 		} catch (ApiException e) {
 			logger.debug("API Exception", e);

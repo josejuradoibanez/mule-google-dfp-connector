@@ -15,7 +15,7 @@ import org.mule.modules.google.dfp.automation.GoogleDfpTestParent;
 import org.mule.modules.google.dfp.automation.RegressionTests;
 import org.mule.modules.google.dfp.automation.SmokeTests;
 
-import com.google.api.ads.dfp.axis.v201411.ReportJob;
+import com.google.api.ads.dfp.axis.v201505.ReportJob;
 
 public class CreateReportTestCases
     extends GoogleDfpTestParent
