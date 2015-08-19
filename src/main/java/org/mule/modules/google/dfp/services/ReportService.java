@@ -7,8 +7,7 @@ package org.mule.modules.google.dfp.services;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.net.URL;
 import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
@@ -24,12 +23,13 @@ import com.google.api.ads.dfp.axis.v201505.DateRangeType;
 import com.google.api.ads.dfp.axis.v201505.Dimension;
 import com.google.api.ads.dfp.axis.v201505.DimensionAttribute;
 import com.google.api.ads.dfp.axis.v201505.ExportFormat;
+import com.google.api.ads.dfp.axis.v201505.ReportDownloadOptions;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
 import com.google.api.ads.dfp.axis.v201505.ReportQuery;
 import com.google.api.ads.dfp.axis.v201505.ReportQueryAdUnitView;
 import com.google.api.ads.dfp.axis.v201505.ReportServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
-import com.google.api.ads.dfp.lib.utils.ReportCallback;
+import com.google.common.io.Resources;
 
 public class ReportService {
 
@@ -124,10 +124,6 @@ public class ReportService {
 			// Get the ReportService.
 			ReportServiceInterface reportService = createReportService(session);
 
-			final PipedOutputStream pipedOutputStream = new PipedOutputStream();
-			PipedInputStream pipedInputStream = new PipedInputStream(
-					pipedOutputStream);
-
 			// Create report downloader.
 			final ReportDownloader reportDownloader = new ReportDownloader(
 					reportService, reportJob.getId());
@@ -139,17 +135,18 @@ public class ReportService {
 				throw new ReportDownloadException();
 			}
 
-			createDownloaderThread(reportDownloader, pipedOutputStream);
-			
-			return pipedInputStream;
+			ReportDownloadOptions options = new ReportDownloadOptions();
+			options.setExportFormat(ExportFormat.CSV_DUMP);
+			options.setUseGzipCompression(true);
+			URL url = reportDownloader.getDownloadUrl(options);
+
+			return Resources.asByteSource(url).openStream();
+
 		} catch (ApiException e) {
 			logger.debug("API Exception", e);
 			throw new ReportDownloadException();
 		} catch (RemoteException e) {
 			logger.debug("Remote Exception", e);
-			throw new ReportDownloadException();
-		} catch (InterruptedException e) {
-			logger.debug("Interrupted Exception", e);
 			throw new ReportDownloadException();
 		} catch (IOException e) {
 			logger.debug("IO Exception", e);
@@ -158,38 +155,6 @@ public class ReportService {
 			logger.debug("Exception", e);
 			throw new ReportDownloadException();
 		}
-	}
-
-	private void createDownloaderThread(
-			final ReportDownloader reportDownloader,
-			final PipedOutputStream pipedOutputStream) {
-		reportDownloader.whenReportReady(new ReportCallback() {
-			public void onSuccess() {
-				try {
-
-					logger.info("Downloading report");
-					// Download the report.
-					reportDownloader.downloadReport(ExportFormat.CSV_DUMP,
-							pipedOutputStream);
-					logger.info("Downloading report complete");
-				} catch (IOException e) {
-					logger.error("Report download failed." , e);
-				}
-			}
-
-			public void onInterruption() {
-				logger.error("Report download interupted.");
-			}
-
-			public void onFailure() {
-				logger.error("Report download failed.");
-			}
-
-			public void onException(Exception e) {
-				logger.error("Report download failed.");
-			}
-		});
-
 	}
 
 	public long[] getCustomFieldsIds() {
