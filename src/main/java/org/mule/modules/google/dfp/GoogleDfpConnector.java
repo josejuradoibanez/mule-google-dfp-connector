@@ -54,7 +54,7 @@ public class GoogleDfpConnector {
     @Processor
     public Object myProcessor(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.BOTH) String dimension, @Default("#[payload]") Map<String, Object> types, Date startDate,
             Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService().createReport2(connectionStrategy.getSession(), startDate, endDate, types);
+        return connectionStrategy.getReportService().createReport(connectionStrategy.getSession(), startDate, endDate);
     }
 
     /**

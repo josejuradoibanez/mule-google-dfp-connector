@@ -98,35 +98,40 @@ public class GoogleDfpConnectionStrategy {
     @Configurable
     @Optional
     private List<String> customIds;
+
+
+
+    // Commented out @Start method since it is not being accessed as of devkit-3.7
     
-    /**
-     * Initialize all the Google DFP services. Once initialize, each service is configured if necessary.
-     */
-    @Start
-    public void initialiseAndConfigureServices() {
 
-        // Initialize and configure Report Service
-        reportService = new ReportService();
-
-        if (customIds != null && !customIds.isEmpty()) {
-            long[] customFieldIds = new long[customIds.size()];
-
-            for (int i = 0; i < customIds.size(); i++) {
-                customFieldIds[i] = Long.parseLong(customIds.get(i));
-            }
-
-            reportService.setCustomFieldsIds(customFieldIds);
-        }
-
-        // Initialize and configure Company Service
-        companyService = new CompanyService();
-
-        // Initialize and configure reconciliation report service
-        reconciliationReportService = new ReconciliationReportService();
-
-        // Initialize and configure reconciliation report row service
-        reconciliationReportRowService = new ReconciliationReportRowService();
-    }
+//    /**
+//     * Initialize all the Google DFP services. Once initialize, each service is configured if necessary.
+//     */
+//    @Start
+//    public void initialiseAndConfigureServices() {
+//
+//        // Initialize and configure Report Service
+//        reportService = new ReportService();
+//
+//        if (customIds != null && !customIds.isEmpty()) {
+//            long[] customFieldIds = new long[customIds.size()];
+//
+//            for (int i = 0; i < customIds.size(); i++) {
+//                customFieldIds[i] = Long.parseLong(customIds.get(i));
+//            }
+//
+//            reportService.setCustomFieldsIds(customFieldIds);
+//        }
+//
+//        // Initialize and configure Company Service
+//        companyService = new CompanyService();
+//
+//        // Initialize and configure reconciliation report service
+//        reconciliationReportService = new ReconciliationReportService();
+//
+//        // Initialize and configure reconciliation report row service
+//        reconciliationReportRowService = new ReconciliationReportRowService();
+//    }
 
     // testing without...
 //    @PostConstruct
@@ -147,6 +152,28 @@ public class GoogleDfpConnectionStrategy {
     @TestConnectivity(label = "Test Connection")
     public void connect(@ConnectionKey String clientId, @Password String clientSecret) throws ConnectionException {
         try {
+
+            // Initialize and configure Report Service
+            reportService = new ReportService();
+
+            if (customIds != null && !customIds.isEmpty()) {
+                long[] customFieldIds = new long[customIds.size()];
+
+                for (int i = 0; i < customIds.size(); i++) {
+                    customFieldIds[i] = Long.parseLong(customIds.get(i));
+                }
+
+                reportService.setCustomFieldsIds(customFieldIds);
+            }
+
+            // Initialize and configure Company Service
+            companyService = new CompanyService();
+
+            // Initialize and configure reconciliation report service
+            reconciliationReportService = new ReconciliationReportService();
+
+            // Initialize and configure reconciliation report row service
+            reconciliationReportRowService = new ReconciliationReportRowService();
 
             /*
              * Generate a refreshable OAuth2 credential similar to a ClientLogin token and can be used in place of a service account.

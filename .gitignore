@@ -8,3 +8,5 @@ target/
 /bin/
 .DS_Store
 .factorypath
+*.idea
+*.iml
