@@ -6,6 +6,7 @@
 package org.mule.modules.google.dfp.services;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,11 +29,12 @@ import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.CompanyPage;
 import com.google.api.ads.dfp.axis.v201505.CompanyServiceInterface;
 import com.google.api.ads.dfp.axis.v201505.CompanyType;
+import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class CompanyService {
 
-	private static final Logger logger  = Logger.getLogger(CompanyService.class);
+	private static final Logger logger = Logger.getLogger(CompanyService.class);
 
 	protected CompanyServiceInterface createCompanyService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
@@ -44,22 +46,32 @@ public class CompanyService {
 		return companyService;
 	}
 
-	public List<Company> getAllCompanies(DfpSession session)
-			throws GetAllCompaniesException {
+	public List<Company> getAllCompanies(DfpSession session,
+			DateTime lastModifiedDateTime) throws GetAllCompaniesException {
 		try {
 			// Get the CompanyService.
 			CompanyServiceInterface companyService = createCompanyService(session);
 
 			// Create a statement to get company by name
-			StatementBuilder statementBuilder = new StatementBuilder();
+			StatementBuilder statementBuilder = new StatementBuilder().where("lastModifiedDateTime > :lastModifiedDateTime")
+					.withBindVariableValue("lastModifiedDateTime",
+							lastModifiedDateTime);
+//					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 
 			// Get companies by statement.
 			CompanyPage page = companyService
 					.getCompaniesByStatement(statementBuilder.toStatement());
 
 			Company[] companies = page.getResults();
+
 			
-			return Arrays.asList(companies);
+			List<Company> results = new ArrayList<Company>();
+			if(companies != null){
+				results = Arrays.asList(companies);
+			}
+			
+			return results;
+	
 		} catch (ApiException e) {
 			throw new GetAllCompaniesException(e);
 		} catch (RemoteException e) {
@@ -179,7 +191,7 @@ public class CompanyService {
 
 			// Default for total result set size.
 			int totalResultSetSize = 0;
-			Company companyFound= null;
+			Company companyFound = null;
 
 			do {
 				// Get companies by statement.

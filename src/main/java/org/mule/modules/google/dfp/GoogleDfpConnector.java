@@ -33,6 +33,7 @@ import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 
 import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.Date;
+import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
 
@@ -102,8 +103,8 @@ public class GoogleDfpConnector {
      *             Get All Companies Exception
      */
     @Processor
-    public List<Company> getAllCompanies() throws GetAllCompaniesException {
-        return connectionStrategy.getCompanyService().getAllCompanies(connectionStrategy.getSession());
+    public List<Company> getAllCompanies(@Default("#[payload]") DateTime lastModifiedDate) throws GetAllCompaniesException {
+        return connectionStrategy.getCompanyService().getAllCompanies(connectionStrategy.getSession(), lastModifiedDate);
     }
 
     /**
