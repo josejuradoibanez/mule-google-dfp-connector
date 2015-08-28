@@ -53,7 +53,8 @@ public class CompanyService {
 			CompanyServiceInterface companyService = createCompanyService(session);
 
 			// Create a statement to get company by name
-			StatementBuilder statementBuilder = new StatementBuilder().where("lastModifiedDateTime > :lastModifiedDateTime")
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.where("lastModifiedDateTime > :lastModifiedDateTime")
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime);
 //					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
@@ -64,14 +65,13 @@ public class CompanyService {
 
 			Company[] companies = page.getResults();
 
-			
 			List<Company> results = new ArrayList<Company>();
-			if(companies != null){
+			if (companies != null) {
 				results = Arrays.asList(companies);
 			}
-			
+
 			return results;
-	
+
 		} catch (ApiException e) {
 			throw new GetAllCompaniesException(e);
 		} catch (RemoteException e) {

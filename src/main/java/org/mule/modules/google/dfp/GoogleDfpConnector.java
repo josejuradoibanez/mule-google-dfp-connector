@@ -22,6 +22,7 @@ import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
+import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportRowException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
@@ -34,6 +35,7 @@ import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
+import com.google.api.ads.dfp.axis.v201505.Product;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
 
@@ -234,6 +236,21 @@ public class GoogleDfpConnector {
         return connectionStrategy.getCompanyService().updateCompany(connectionStrategy.getSession(), company);
     }
 
+    
+    /**
+     * Retrieve all products
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * 
+     * @return All products
+     * @throws GetProductsByStatementException
+     *             Get Products Exception
+     */
+    @Processor
+    public List<Product> getProductsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProductsByStatementException{
+        return connectionStrategy.getProductService().getProductsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    }
+    
     /**
      * @return connection strategy
      */

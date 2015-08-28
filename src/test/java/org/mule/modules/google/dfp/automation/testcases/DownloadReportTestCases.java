@@ -29,7 +29,7 @@ public class DownloadReportTestCases extends AbstractTestCase {
     }
 
 //    protected InputStream downloadReport(ReportJob reportJob) throws Exception {
-//        MuleEvent response = runFlow("download-report", reportJob);
+//        MuleEvent response =   runFlow("download-report", reportJob);
 //        Assert.assertNotNull(response);
 //        Assert.assertNotNull(response.getMessage());
 //        Assert.assertNotNull(response.getMessage().getPayload());
