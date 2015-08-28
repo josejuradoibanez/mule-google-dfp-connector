@@ -30,6 +30,8 @@ import com.google.api.ads.dfp.axis.v201505.CompanyPage;
 import com.google.api.ads.dfp.axis.v201505.CompanyServiceInterface;
 import com.google.api.ads.dfp.axis.v201505.CompanyType;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
+import com.google.api.ads.dfp.axis.v201505.Product;
+import com.google.api.ads.dfp.axis.v201505.ProductPage;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class CompanyService {
@@ -53,24 +55,39 @@ public class CompanyService {
 			CompanyServiceInterface companyService = createCompanyService(session);
 
 			// Create a statement to get company by name
-			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime > :lastModifiedDateTime")
+			StatementBuilder statementBuilder = new StatementBuilder().where(
+					"lastModifiedDateTime >= :lastModifiedDateTime")
 					.withBindVariableValue("lastModifiedDateTime",
-							lastModifiedDateTime);
-//					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+							lastModifiedDateTime)
+			 .limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 
-			// Get companies by statement.
-			CompanyPage page = companyService
-					.getCompaniesByStatement(statementBuilder.toStatement());
-
-			Company[] companies = page.getResults();
-
+			int totalResultSetSize = 0;
 			List<Company> results = new ArrayList<Company>();
-			if (companies != null) {
-				results = Arrays.asList(companies);
-			}
+			do {
+				// Get companies by statement.
+				CompanyPage page = companyService
+						.getCompaniesByStatement(statementBuilder.toStatement());
+
+				if (page.getResults() != null) {
+					totalResultSetSize = page.getTotalResultSetSize();
+					for (Company company : page.getResults()) {
+						results.add(company);
+					}
+				}
+
+				statementBuilder
+						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+			} while (statementBuilder.getOffset() < totalResultSetSize);
 
 			return results;
+
+			// Company[] companies = page.getResults();
+			//
+			// if (companies != null) {
+			// results = Arrays.asList(companies);
+			// }
+			//
+			// return results;
 
 		} catch (ApiException e) {
 			throw new GetAllCompaniesException(e);

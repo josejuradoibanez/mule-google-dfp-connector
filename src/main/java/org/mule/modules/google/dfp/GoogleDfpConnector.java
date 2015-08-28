@@ -35,6 +35,7 @@ import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
+import com.google.api.ads.dfp.axis.v201505.LineItem;
 import com.google.api.ads.dfp.axis.v201505.Product;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
@@ -249,6 +250,20 @@ public class GoogleDfpConnector {
     @Processor
     public List<Product> getProductsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProductsByStatementException{
         return connectionStrategy.getProductService().getProductsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    }
+    
+    /**
+     * Retrieve all line items
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * 
+     * @return All products
+     * @throws GetProductsByStatementException
+     *             Get Products Exception
+     */
+    @Processor
+    public List<LineItem> getLineItemsByStatement(@Default("#[payload]") DateTime lastModifiedDate){
+        return connectionStrategy.getLineItemService().getLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate);
     }
     
     /**

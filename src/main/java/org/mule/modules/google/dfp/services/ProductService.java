@@ -25,7 +25,7 @@ public class ProductService {
 	protected ProductServiceInterface createProductService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
 
-		// Get the CompanyService.
+		// Get the Product Service.
 		ProductServiceInterface productService = dfpServices.get(session,
 				ProductServiceInterface.class);
 
@@ -36,29 +36,40 @@ public class ProductService {
 			DateTime lastModifiedDateTime)
 			throws GetProductsByStatementException {
 		try {
-			// Get the CompanyService.
+
 			ProductServiceInterface productService = createProductService(session);
 
 			Date date = new Date(2015, 7, 8);
 			DateTime testDate = new DateTime(date, 9, 19, 30, "Etc/GMT");
 
-			// Create a statement to get company by name
-			StatementBuilder statementBuilder = new StatementBuilder();
-//					.orderBy("lastModifiedDateTime ASC")
-//					.where("name = :name")
-//					.withBindVariableValue("name", "PH_Commercial_Audio_Mobile")
-//					.limit(7);
+			StatementBuilder statementBuilder = new StatementBuilder().orderBy(
+					"lastModifiedDateTime ASC").limit(
+					StatementBuilder.SUGGESTED_PAGE_LIMIT);
+			// .where("lastModifiedDateTime = :lastModifiedDateTime")
+			// .withBindVariableValue("lastModifiedDateTime",
+			// lastModifiedDateTime)
 
-			// Get companies by statement.
-			ProductPage page = productService
-					.getProductsByStatement(statementBuilder.toStatement());
-
-			Product[] products = page.getResults();
-
+			int totalResultSetSize = 0;
 			List<Product> results = new ArrayList<Product>();
-			if (products != null) {
-				results = Arrays.asList(products);
-			}
+			List<Product> test = new ArrayList<Product>();
+
+			do {
+				// Get products by statement.
+				ProductPage page = productService
+						.getProductsByStatement(statementBuilder.toStatement());
+
+				if (page.getResults() != null) {
+					totalResultSetSize = page.getTotalResultSetSize();
+
+//					test.addAll(new ArrayList<Object>(Arrays.asList(page.getResults())));
+					for (Product product : page.getResults()) {
+						results.add(product);
+					}
+				}
+
+				statementBuilder
+						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+			} while (statementBuilder.getOffset() < totalResultSetSize);
 
 			return results;
 

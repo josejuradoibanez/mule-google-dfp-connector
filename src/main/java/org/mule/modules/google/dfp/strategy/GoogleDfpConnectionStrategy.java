@@ -27,6 +27,7 @@ import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
 import org.mule.modules.google.dfp.services.CompanyService;
+import org.mule.modules.google.dfp.services.LineItemService;
 import org.mule.modules.google.dfp.services.ProductService;
 import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
 import org.mule.modules.google.dfp.services.ReconciliationReportService;
@@ -51,6 +52,7 @@ public class GoogleDfpConnectionStrategy {
 	private ReportService reportService;
 	private CompanyService companyService;
 	private ProductService productService;
+	private LineItemService lineItemService;
 	private ReconciliationReportService reconciliationReportService;
 	private ReconciliationReportRowService reconciliationReportRowService;
 
@@ -98,35 +100,6 @@ public class GoogleDfpConnectionStrategy {
 	@Optional
 	private List<String> customIds;
 
-	// Commented out @Start method since it is not being accessed as of
-	// devkit-3.7
-
-	// @Start
-	// public void initialiseAndConfigureServices() {
-	//
-	// // Initialize and configure Report Service
-	// reportService = new ReportService();
-	//
-	// if (customIds != null && !customIds.isEmpty()) {
-	// long[] customFieldIds = new long[customIds.size()];
-	//
-	// for (int i = 0; i < customIds.size(); i++) {
-	// customFieldIds[i] = Long.parseLong(customIds.get(i));
-	// }
-	//
-	// reportService.setCustomFieldsIds(customFieldIds);
-	// }
-	//
-	// // Initialize and configure Company Service
-	// companyService = new CompanyService();
-	//
-	// // Initialize and configure reconciliation report service
-	// reconciliationReportService = new ReconciliationReportService();
-	//
-	// // Initialize and configure reconciliation report row service
-	// reconciliationReportRowService = new ReconciliationReportRowService();
-	// }
-
 	/**
 	 * Connect
 	 * 
@@ -141,12 +114,12 @@ public class GoogleDfpConnectionStrategy {
 	public void connect(@ConnectionKey String clientId,
 			@Password String clientSecret) throws ConnectionException {
 		try {
-			
+
 			/**
-			 * Initialise all the Google DFP services on startup. Once initialised, each
-			 * service is configured if necessary.
+			 * Initialise all the Google DFP services on startup. Once
+			 * initialised, each service is configured if necessary.
 			 */
-			
+
 			// Initialize and configure Report Service
 			reportService = new ReportService();
 
@@ -162,9 +135,12 @@ public class GoogleDfpConnectionStrategy {
 
 			// Initialize and configure Company Service
 			companyService = new CompanyService();
-			
-			// Initialize and configure Report Service
+
+			// Initialize and configure Product Service
 			productService = new ProductService();
+
+			// Initialize and configure LineItem Service
+			lineItemService = new LineItemService();
 
 			// Initialize and configure reconciliation report service
 			reconciliationReportService = new ReconciliationReportService();
@@ -245,6 +221,14 @@ public class GoogleDfpConnectionStrategy {
 
 	public void setProductService(ProductService productService) {
 		this.productService = productService;
+	}
+
+	public LineItemService getLineItemService() {
+		return lineItemService;
+	}
+
+	public void setLineItemService(LineItemService lineItemService) {
+		this.lineItemService = lineItemService;
 	}
 
 	public ReportService getReportService() {
