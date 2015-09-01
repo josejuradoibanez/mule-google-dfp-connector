@@ -13,7 +13,6 @@ import com.google.api.ads.dfp.axis.v201505.ApiException;
 import com.google.api.ads.dfp.axis.v201505.CustomField;
 import com.google.api.ads.dfp.axis.v201505.CustomFieldPage;
 import com.google.api.ads.dfp.axis.v201505.CustomFieldServiceInterface;
-import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class CustomFieldService {
@@ -32,8 +31,7 @@ public class CustomFieldService {
 		return customFieldsService;
 	}
 
-	public List<CustomField> getCustomFieldsByStatement(DfpSession session,
-			DateTime lastModifiedDateTime) throws GetCustomFieldsException {
+	public List<CustomField> getCustomFieldsByStatement(DfpSession session) throws GetCustomFieldsException {
 		try {
 
 			CustomFieldServiceInterface customFieldService = createCustomFieldService(session);
@@ -41,14 +39,10 @@ public class CustomFieldService {
 			// Create a statement to only select customFields updated or created
 			// since the lastModifiedDateTime.
 			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime >= :lastModifiedDateTime")
 					.orderBy("id ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
-					.withBindVariableValue("lastModifiedDateTime",
-							lastModifiedDateTime);
+					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 
-			logger.info("Getting all custom fields modified since "
-					+ lastModifiedDateTime.toString() + ".");
+			logger.info("Getting all custom fields.");
 			
 			// Default for total result set size.
 			int totalResultSetSize = 0;

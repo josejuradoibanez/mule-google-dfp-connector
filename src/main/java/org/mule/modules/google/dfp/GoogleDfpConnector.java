@@ -21,6 +21,7 @@ import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
 import org.mule.modules.google.dfp.exceptions.GetCustomFieldsException;
 import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
+import org.mule.modules.google.dfp.exceptions.GetOrdersException;
 import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportRowException;
@@ -36,6 +37,7 @@ import com.google.api.ads.dfp.axis.v201505.CustomField;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.axis.v201505.LineItem;
+import com.google.api.ads.dfp.axis.v201505.Order;
 import com.google.api.ads.dfp.axis.v201505.Product;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
@@ -277,9 +279,24 @@ public class GoogleDfpConnector {
      *            Get custom fields exception
      */
     @Processor
-    public List<CustomField> getCustomFieldsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetCustomFieldsException{
-        return connectionStrategy.getCustomFieldService().getCustomFieldsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    public List<CustomField> getCustomFieldsByStatement() throws GetCustomFieldsException{
+        return connectionStrategy.getCustomFieldService().getCustomFieldsByStatement(connectionStrategy.getSession());
     }
+    
+    /**
+     * Retrieve custom fields by modified date
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * 
+     * @return CustomField
+     * @throws GetCustomFieldsException
+     *            Get custom fields exception
+     */
+    @Processor
+    public List<Order> getOrderssByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetOrdersException{
+        return connectionStrategy.getOrderService().getOrdersByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    }
+    
     
     /**
      * @return connection strategy

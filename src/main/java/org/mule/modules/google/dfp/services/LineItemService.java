@@ -50,8 +50,7 @@ public class LineItemService {
 
 			List<LineItem> results = new ArrayList<LineItem>();
 
-			logger.info("Getting all line items modified since "
-					+ lastModifiedDateTime.toString() + ".");
+			logger.info("Getting all modified line items");
 
 			do {
 				// Get line items by statement.

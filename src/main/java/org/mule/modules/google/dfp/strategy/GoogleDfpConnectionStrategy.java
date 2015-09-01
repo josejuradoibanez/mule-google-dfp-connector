@@ -29,6 +29,7 @@ import org.mule.api.annotations.param.Optional;
 import org.mule.modules.google.dfp.services.CompanyService;
 import org.mule.modules.google.dfp.services.CustomFieldService;
 import org.mule.modules.google.dfp.services.LineItemService;
+import org.mule.modules.google.dfp.services.OrderService;
 import org.mule.modules.google.dfp.services.ProductService;
 import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
 import org.mule.modules.google.dfp.services.ReconciliationReportService;
@@ -55,6 +56,7 @@ public class GoogleDfpConnectionStrategy {
 	private ProductService productService;
 	private LineItemService lineItemService;
 	private CustomFieldService customFieldService;
+	private OrderService orderService;
 	private ReconciliationReportService reconciliationReportService;
 	private ReconciliationReportRowService reconciliationReportRowService;
 
@@ -146,6 +148,9 @@ public class GoogleDfpConnectionStrategy {
 			
 			//Initialize and configure Custom Field Service
 			customFieldService = new CustomFieldService();
+			
+			//Initialize and configure Order Service
+			orderService = new OrderService();
 
 			// Initialize and configure reconciliation report service
 			reconciliationReportService = new ReconciliationReportService();
@@ -242,6 +247,14 @@ public class GoogleDfpConnectionStrategy {
 
 	public void setCustomFieldService(CustomFieldService customFieldService) {
 		this.customFieldService = customFieldService;
+	}
+
+	public OrderService getOrderService() {
+		return orderService;
+	}
+
+	public void setOrderService(OrderService orderService) {
+		this.orderService = orderService;
 	}
 
 	public ReportService getReportService() {
