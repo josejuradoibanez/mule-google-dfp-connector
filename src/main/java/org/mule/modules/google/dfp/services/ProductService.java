@@ -2,7 +2,6 @@ package org.mule.modules.google.dfp.services;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -11,7 +10,6 @@ import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
 import com.google.api.ads.dfp.axis.factory.DfpServices;
 import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
 import com.google.api.ads.dfp.axis.v201505.ApiException;
-import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.axis.v201505.Product;
 import com.google.api.ads.dfp.axis.v201505.ProductPage;
@@ -39,9 +37,6 @@ public class ProductService {
 
 			ProductServiceInterface productService = createProductService(session);
 
-			Date date = new Date(2015, 7, 8);
-			DateTime testDate = new DateTime(date, 9, 19, 30, "Etc/GMT");
-
 			StatementBuilder statementBuilder = new StatementBuilder().orderBy(
 					"lastModifiedDateTime ASC").limit(
 					StatementBuilder.SUGGESTED_PAGE_LIMIT);
@@ -51,7 +46,6 @@ public class ProductService {
 
 			int totalResultSetSize = 0;
 			List<Product> results = new ArrayList<Product>();
-			List<Product> test = new ArrayList<Product>();
 
 			do {
 				// Get products by statement.
@@ -61,7 +55,6 @@ public class ProductService {
 				if (page.getResults() != null) {
 					totalResultSetSize = page.getTotalResultSetSize();
 
-//					test.addAll(new ArrayList<Object>(Arrays.asList(page.getResults())));
 					for (Product product : page.getResults()) {
 						results.add(product);
 					}
@@ -70,6 +63,8 @@ public class ProductService {
 				statementBuilder
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
+
+			logger.info("Retrieved " + totalResultSetSize + " products.");
 
 			return results;
 

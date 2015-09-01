@@ -7,21 +7,20 @@ package org.mule.modules.google.dfp;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
 import org.mule.api.annotations.MetaDataScope;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.param.Default;
-import org.mule.api.annotations.param.MetaDataKeyParam;
-import org.mule.api.annotations.param.MetaDataKeyParamAffectsType;
 import org.mule.modules.google.dfp.exceptions.CreateFailedException;
 import org.mule.modules.google.dfp.exceptions.CreateReportException;
 import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
+import org.mule.modules.google.dfp.exceptions.GetCustomFieldsException;
+import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportRowException;
@@ -33,6 +32,7 @@ import org.mule.modules.google.dfp.reconciliationreport.ReconciliationQueryParam
 import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 
 import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201505.CustomField;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.axis.v201505.LineItem;
@@ -55,11 +55,11 @@ public class GoogleDfpConnector {
     GoogleDfpConnectionStrategy connectionStrategy;
 
     // experimental processor to test out dynamic datasense to get visual selection of Dimension
-    @Processor
-    public Object myProcessor(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.BOTH) String dimension, @Default("#[payload]") Map<String, Object> types, Date startDate,
-            Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService().createReport(connectionStrategy.getSession(), startDate, endDate);
-    }
+//    @Processor
+//    public Object myProcessor(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.BOTH) String dimension, @Default("#[payload]") Map<String, Object> types, Date startDate,
+//            Date endDate) throws CreateReportException {
+//        return connectionStrategy.getReportService().createReport(connectionStrategy.getSession(), startDate, endDate);
+//    }
 
     /**
      * Creates a report given a date range
@@ -253,17 +253,32 @@ public class GoogleDfpConnector {
     }
     
     /**
-     * Retrieve all line items
+     * Retrieve line items by modified date
      * 
      * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
      * 
-     * @return All products
-     * @throws GetProductsByStatementException
-     *             Get Products Exception
+     * @return LineItem 
+     * @throws GetLineItemsException
+     *             Get Line Items Exception
      */
     @Processor
-    public List<LineItem> getLineItemsByStatement(@Default("#[payload]") DateTime lastModifiedDate){
+    public List<LineItem> getLineItemsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetLineItemsException{
         return connectionStrategy.getLineItemService().getLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    }
+    
+    
+    /**
+     * Retrieve custom fields by modified date
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * 
+     * @return CustomField
+     * @throws GetCustomFieldsException
+     *            Get custom fields exception
+     */
+    @Processor
+    public List<CustomField> getCustomFieldsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetCustomFieldsException{
+        return connectionStrategy.getCustomFieldService().getCustomFieldsByStatement(connectionStrategy.getSession(), lastModifiedDate);
     }
     
     /**

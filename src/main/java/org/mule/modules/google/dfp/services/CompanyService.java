@@ -7,7 +7,6 @@ package org.mule.modules.google.dfp.services;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,8 +29,6 @@ import com.google.api.ads.dfp.axis.v201505.CompanyPage;
 import com.google.api.ads.dfp.axis.v201505.CompanyServiceInterface;
 import com.google.api.ads.dfp.axis.v201505.CompanyType;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
-import com.google.api.ads.dfp.axis.v201505.Product;
-import com.google.api.ads.dfp.axis.v201505.ProductPage;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class CompanyService {
@@ -81,13 +78,6 @@ public class CompanyService {
 
 			return results;
 
-			// Company[] companies = page.getResults();
-			//
-			// if (companies != null) {
-			// results = Arrays.asList(companies);
-			// }
-			//
-			// return results;
 
 		} catch (ApiException e) {
 			throw new GetAllCompaniesException(e);
