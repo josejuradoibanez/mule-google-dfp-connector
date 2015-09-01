@@ -23,6 +23,8 @@ import org.mule.modules.google.dfp.exceptions.GetCustomFieldsException;
 import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetOrdersException;
 import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
+import org.mule.modules.google.dfp.exceptions.GetProposalLineItemsException;
+import org.mule.modules.google.dfp.exceptions.GetProposalsException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportRowException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
@@ -39,6 +41,8 @@ import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.axis.v201505.LineItem;
 import com.google.api.ads.dfp.axis.v201505.Order;
 import com.google.api.ads.dfp.axis.v201505.Product;
+import com.google.api.ads.dfp.axis.v201505.Proposal;
+import com.google.api.ads.dfp.axis.v201505.ProposalLineItem;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
 
@@ -288,13 +292,41 @@ public class GoogleDfpConnector {
      * 
      * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
      * 
-     * @return CustomField
+     * @return List of CustomField
      * @throws GetCustomFieldsException
      *            Get custom fields exception
      */
     @Processor
-    public List<Order> getOrderssByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetOrdersException{
+    public List<Order> getOrdersByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetOrdersException{
         return connectionStrategy.getOrderService().getOrdersByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    }
+    
+    /**
+     * Retrieve proposals by modified date
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * 
+     * @return List of Proposals
+     * @throws GetProposalsException
+     *            Get proposals exception
+     */
+    @Processor
+    public List<Proposal> getProposalsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProposalsException{
+        return connectionStrategy.getProposalService().getProposalsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    }
+    
+    /**
+     * Retrieve proposals by modified date
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * 
+     * @return List of Proposal LineItems
+     * @throws GetProposalsException
+     *            Get proposals exception
+     */
+    @Processor
+    public List<ProposalLineItem> getProposalLineItemsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProposalLineItemsException{
+        return connectionStrategy.getProposalLineItemService().getProposalLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate);
     }
     
     

@@ -31,6 +31,8 @@ import org.mule.modules.google.dfp.services.CustomFieldService;
 import org.mule.modules.google.dfp.services.LineItemService;
 import org.mule.modules.google.dfp.services.OrderService;
 import org.mule.modules.google.dfp.services.ProductService;
+import org.mule.modules.google.dfp.services.ProposalLineItemService;
+import org.mule.modules.google.dfp.services.ProposalService;
 import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
 import org.mule.modules.google.dfp.services.ReconciliationReportService;
 import org.mule.modules.google.dfp.services.ReportService;
@@ -57,6 +59,8 @@ public class GoogleDfpConnectionStrategy {
 	private LineItemService lineItemService;
 	private CustomFieldService customFieldService;
 	private OrderService orderService;
+	private ProposalService proposalService;
+	private ProposalLineItemService proposalLineItemService;
 	private ReconciliationReportService reconciliationReportService;
 	private ReconciliationReportRowService reconciliationReportRowService;
 
@@ -151,6 +155,12 @@ public class GoogleDfpConnectionStrategy {
 			
 			//Initialize and configure Order Service
 			orderService = new OrderService();
+			
+			//Initialize and configure Proposal Service
+			proposalService = new ProposalService();
+			
+			//Initialize and configure Proposal Line Item Service
+			proposalLineItemService = new ProposalLineItemService();
 
 			// Initialize and configure reconciliation report service
 			reconciliationReportService = new ReconciliationReportService();
@@ -255,6 +265,23 @@ public class GoogleDfpConnectionStrategy {
 
 	public void setOrderService(OrderService orderService) {
 		this.orderService = orderService;
+	}
+
+	public ProposalService getProposalService() {
+		return proposalService;
+	}
+
+	public void setProposalService(ProposalService proposalService) {
+		this.proposalService = proposalService;
+	}
+
+	public ProposalLineItemService getProposalLineItemService() {
+		return proposalLineItemService;
+	}
+
+	public void setProposalLineItemService(
+			ProposalLineItemService proposalLineItemService) {
+		this.proposalLineItemService = proposalLineItemService;
 	}
 
 	public ReportService getReportService() {

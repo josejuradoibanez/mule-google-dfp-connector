@@ -22,7 +22,7 @@ public class OrderService {
 	protected OrderServiceInterface createOrderService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
 
-		// Get the CustomField service.
+		// Get the Order service.
 		OrderServiceInterface ordersService = dfpServices.get(session,
 				OrderServiceInterface.class);
 
