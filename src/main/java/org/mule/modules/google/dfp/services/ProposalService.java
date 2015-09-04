@@ -18,7 +18,7 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class ProposalService {
 
-	private static final Logger logger = Logger.getLogger(OrderService.class);
+	private static final Logger logger = Logger.getLogger(ProposalService.class);
 
 	protected ProposalServiceInterface createProposalService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
@@ -38,18 +38,18 @@ public class ProposalService {
 			// Create a statement to only select proposals that were modified
 			// recently.
 			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime = :lastModifiedDateTime")
 					.orderBy("id ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
-					.withBindVariableValue("lastModifiedDateTime",
-							lastModifiedDate);
+					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+//					.where("lastModifiedDateTime = :lastModifiedDateTime")
+//					.withBindVariableValue("lastModifiedDateTime",
+//							lastModifiedDate);
 
 			// Default for total result set size.
 			int totalResultSetSize = 0;
 
 			List<Proposal> results = new ArrayList<Proposal>();
 
-			logger.info("Getting all modified proposals");
+			logger.info("Getting all modified proposals.");
 
 			do {
 				// Get proposals by statement.

@@ -31,6 +31,7 @@ import org.mule.modules.google.dfp.services.CustomFieldService;
 import org.mule.modules.google.dfp.services.LineItemService;
 import org.mule.modules.google.dfp.services.OrderService;
 import org.mule.modules.google.dfp.services.ProductService;
+import org.mule.modules.google.dfp.services.ProductTemplateService;
 import org.mule.modules.google.dfp.services.ProposalLineItemService;
 import org.mule.modules.google.dfp.services.ProposalService;
 import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
@@ -55,12 +56,13 @@ public class GoogleDfpConnectionStrategy {
 	private DfpSession session;
 	private ReportService reportService;
 	private CompanyService companyService;
-	private ProductService productService;
 	private LineItemService lineItemService;
 	private CustomFieldService customFieldService;
 	private OrderService orderService;
 	private ProposalService proposalService;
 	private ProposalLineItemService proposalLineItemService;
+	private ProductService productService;
+	private ProductTemplateService productTemplateService;
 	private ReconciliationReportService reconciliationReportService;
 	private ReconciliationReportRowService reconciliationReportRowService;
 
@@ -146,6 +148,9 @@ public class GoogleDfpConnectionStrategy {
 
 			// Initialize and configure Product Service
 			productService = new ProductService();
+			
+			// Initialize and configure Product Template Service
+			productTemplateService = new ProductTemplateService();
 
 			// Initialize and configure LineItem Service
 			lineItemService = new LineItemService();
@@ -241,6 +246,15 @@ public class GoogleDfpConnectionStrategy {
 
 	public void setProductService(ProductService productService) {
 		this.productService = productService;
+	}
+
+	public ProductTemplateService getProductTemplateService() {
+		return productTemplateService;
+	}
+
+	public void setProductTemplateService(
+			ProductTemplateService productTemplateService) {
+		this.productTemplateService = productTemplateService;
 	}
 
 	public LineItemService getLineItemService() {

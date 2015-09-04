@@ -22,6 +22,7 @@ import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
 import org.mule.modules.google.dfp.exceptions.GetCustomFieldsException;
 import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetOrdersException;
+import org.mule.modules.google.dfp.exceptions.GetProductTemplatesException;
 import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
 import org.mule.modules.google.dfp.exceptions.GetProposalLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetProposalsException;
@@ -41,6 +42,7 @@ import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.axis.v201505.LineItem;
 import com.google.api.ads.dfp.axis.v201505.Order;
 import com.google.api.ads.dfp.axis.v201505.Product;
+import com.google.api.ads.dfp.axis.v201505.ProductTemplate;
 import com.google.api.ads.dfp.axis.v201505.Proposal;
 import com.google.api.ads.dfp.axis.v201505.ProposalLineItem;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
@@ -257,6 +259,21 @@ public class GoogleDfpConnector {
     public List<Product> getProductsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProductsByStatementException{
         return connectionStrategy.getProductService().getProductsByStatement(connectionStrategy.getSession(), lastModifiedDate);
     }
+    
+    /**
+     * Retrieve all product templates
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-product-templates-by-statament}
+     * 
+     * @return All product templates
+     * @throws GetProductTemplatesException
+     *             Get Product Templates Exception
+     */
+    @Processor
+    public List<ProductTemplate> getProductTemplatesByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProductTemplatesException{
+        return connectionStrategy.getProductTemplateService().getProductTemplatesByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    }
+    
     
     /**
      * Retrieve line items by modified date

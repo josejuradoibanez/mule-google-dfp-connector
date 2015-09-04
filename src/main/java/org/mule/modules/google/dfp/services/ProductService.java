@@ -37,15 +37,16 @@ public class ProductService {
 
 			ProductServiceInterface productService = createProductService(session);
 
-			StatementBuilder statementBuilder = new StatementBuilder().orderBy(
-					"lastModifiedDateTime ASC").limit(
-					StatementBuilder.SUGGESTED_PAGE_LIMIT);
-			// .where("lastModifiedDateTime = :lastModifiedDateTime")
-			// .withBindVariableValue("lastModifiedDateTime",
-			// lastModifiedDateTime)
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.orderBy("lastModifiedDateTime ASC")
+					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
+					.where("lastModifiedDateTime = :lastModifiedDateTime")
+					.withBindVariableValue("lastModifiedDateTime",
+							lastModifiedDateTime);
 
-			int totalResultSetSize = 0;
+			int totalResultSetSize = 0; 
 			List<Product> results = new ArrayList<Product>();
+			logger.info("Retrieving modified products.");
 
 			do {
 				// Get products by statement.
