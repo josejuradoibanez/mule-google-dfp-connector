@@ -40,32 +40,31 @@ public class ReportService {
 
 	// Dimensions to include in the report
 	private static final Dimension[] dimensions = new Dimension[] {
-			Dimension.PROPOSAL_ID, Dimension.ORDER_ID, Dimension.LINE_ITEM_ID,
-			Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.ADVERTISER_NAME,
-			Dimension.PROPOSAL_NAME, Dimension.PROPOSAL_AGENCY_NAME,
-			Dimension.MONTH_AND_YEAR, Dimension.RATE_CARD_ID,
-			Dimension.RATE_CARD_NAME, Dimension.PROPOSAL_LINE_ITEM_NAME };
+			Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.DATE,
+			Dimension.PRODUCT_TEMPLATE_ID };
 
 	// Columns to include in the report
 	private static final Column[] columns = new Column[] {
-			Column.BILLING_LOCAL_BILLABLE_NET_REVENUE,
-			Column.RECONCILIATION_RECONCILED_REVENUE,
-			Column.RECONCILIATION_LAST_DATE_TIME,
-			Column.RECONCILIATION_RECONCILIATION_STATUS, };
+			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_AGENCY_COMMISSION,
+			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_GROSS_REVENUE,
+			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_NET_REVENUE,
+			Column.SALES_CONTRACT_CONTRACTED_IMPRESSIONS,
+			Column.SALES_CONTRACT_CONTRACTED_CLICKS };
 
 	// Dimension Attributes to include in the report
-	private static final DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] {
-			DimensionAttribute.ADVERTISER_EXTERNAL_ID,
-			DimensionAttribute.PROPOSAL_AGENCY_EXTERNAL_ID,
-			DimensionAttribute.PROPOSAL_CURRENCY,
-			DimensionAttribute.PROPOSAL_PRIMARY_SALESPERSON,
-			DimensionAttribute.PROPOSAL_START_DATE_TIME,
-			DimensionAttribute.PROPOSAL_END_DATE_TIME,
-			DimensionAttribute.PROPOSAL_PO_NUMBER,
-			DimensionAttribute.LINE_ITEM_START_DATE_TIME,
-			DimensionAttribute.LINE_ITEM_END_DATE_TIME,
-			DimensionAttribute.PROPOSAL_LINE_ITEM_START_DATE_TIME,
-			DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME, };
+	// private static final DimensionAttribute[] dimensionAttributes = new
+	// DimensionAttribute[] {
+	// DimensionAttribute.ADVERTISER_EXTERNAL_ID,
+	// DimensionAttribute.PROPOSAL_AGENCY_EXTERNAL_ID,
+	// DimensionAttribute.PROPOSAL_CURRENCY,
+	// DimensionAttribute.PROPOSAL_PRIMARY_SALESPERSON,
+	// DimensionAttribute.PROPOSAL_START_DATE_TIME,
+	// DimensionAttribute.PROPOSAL_END_DATE_TIME,
+	// DimensionAttribute.PROPOSAL_PO_NUMBER,
+	// DimensionAttribute.LINE_ITEM_START_DATE_TIME,
+	// DimensionAttribute.LINE_ITEM_END_DATE_TIME,
+	// DimensionAttribute.PROPOSAL_LINE_ITEM_START_DATE_TIME,
+	// DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME, };
 
 	protected ReportServiceInterface createReportService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
@@ -92,7 +91,7 @@ public class ReportService {
 			reportQuery.setDimensions(dimensions);
 			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
 			reportQuery.setColumns(columns);
-			reportQuery.setDimensionAttributes(dimensionAttributes);
+//			reportQuery.setDimensionAttributes(dimensionAttributes);
 			reportQuery.setCustomFieldIds(customFieldsIds);
 
 			// Create report date range
