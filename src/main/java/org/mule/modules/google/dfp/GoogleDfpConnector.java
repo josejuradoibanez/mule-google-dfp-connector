@@ -18,6 +18,7 @@ import org.mule.modules.google.dfp.exceptions.CreateReportException;
 import org.mule.modules.google.dfp.exceptions.GetAdvertiserByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAgencyByNameException;
 import org.mule.modules.google.dfp.exceptions.GetAllCompaniesException;
+import org.mule.modules.google.dfp.exceptions.GetAllContactsException;
 import org.mule.modules.google.dfp.exceptions.GetCompanyByIdException;
 import org.mule.modules.google.dfp.exceptions.GetCustomFieldsException;
 import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
@@ -36,6 +37,7 @@ import org.mule.modules.google.dfp.reconciliationreport.ReconciliationQueryParam
 import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 
 import com.google.api.ads.dfp.axis.v201505.Company;
+import com.google.api.ads.dfp.axis.v201505.Contact;
 import com.google.api.ads.dfp.axis.v201505.CustomField;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
@@ -335,7 +337,7 @@ public class GoogleDfpConnector {
     /**
      * Retrieve proposals by modified date
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-proposal-line-items-by-statament}
      * 
      * @return List of Proposal LineItems
      * @throws GetProposalsException
@@ -346,6 +348,19 @@ public class GoogleDfpConnector {
         return connectionStrategy.getProposalLineItemService().getProposalLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate);
     }
     
+    /**
+     * Retrieve contacts
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-contacts-by-statament}
+     * 
+     * @return List of Contacts
+     * @throws GetAllContactsException
+     *            Get all contacts exception
+     */
+    @Processor
+    public List<Contact> getContactsByStatement() throws GetAllContactsException{
+        return connectionStrategy.getContactService().getContactsByStatement(connectionStrategy.getSession());
+    }
     
     /**
      * @return connection strategy

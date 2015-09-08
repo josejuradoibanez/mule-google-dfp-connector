@@ -27,6 +27,7 @@ import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
 import org.mule.modules.google.dfp.services.CompanyService;
+import org.mule.modules.google.dfp.services.ContactService;
 import org.mule.modules.google.dfp.services.CustomFieldService;
 import org.mule.modules.google.dfp.services.LineItemService;
 import org.mule.modules.google.dfp.services.OrderService;
@@ -55,6 +56,7 @@ public class GoogleDfpConnectionStrategy {
 
 	private DfpSession session;
 	private ReportService reportService;
+	private ContactService contactService;
 	private CompanyService companyService;
 	private LineItemService lineItemService;
 	private CustomFieldService customFieldService;
@@ -146,25 +148,28 @@ public class GoogleDfpConnectionStrategy {
 			// Initialize and configure Company Service
 			companyService = new CompanyService();
 
+			// Initialize and configure Contact Service
+			contactService = new ContactService();
+
 			// Initialize and configure Product Service
 			productService = new ProductService();
-			
+
 			// Initialize and configure Product Template Service
 			productTemplateService = new ProductTemplateService();
 
 			// Initialize and configure LineItem Service
 			lineItemService = new LineItemService();
-			
-			//Initialize and configure Custom Field Service
+
+			// Initialize and configure Custom Field Service
 			customFieldService = new CustomFieldService();
-			
-			//Initialize and configure Order Service
+
+			// Initialize and configure Order Service
 			orderService = new OrderService();
-			
-			//Initialize and configure Proposal Service
+
+			// Initialize and configure Proposal Service
 			proposalService = new ProposalService();
-			
-			//Initialize and configure Proposal Line Item Service
+
+			// Initialize and configure Proposal Line Item Service
 			proposalLineItemService = new ProposalLineItemService();
 
 			// Initialize and configure reconciliation report service
@@ -238,6 +243,14 @@ public class GoogleDfpConnectionStrategy {
 	 */
 	public void setSession(DfpSession session) {
 		this.session = session;
+	}
+
+	public ContactService getContactService() {
+		return contactService;
+	}
+
+	public void setContactService(ContactService contactService) {
+		this.contactService = contactService;
 	}
 
 	public ProductService getProductService() {
