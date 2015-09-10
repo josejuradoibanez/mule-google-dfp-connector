@@ -26,6 +26,7 @@
 		<licensePath>LICENSE.md</licensePath>
 		<devkit.studio.package.skip>false</devkit.studio.package.skip>
 		<api.version>2.0.0</api.version>
+		<googledfp.version>v201505</googledfp.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -59,6 +60,34 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<artifactSet>
+                        <includes>
+                            <include>com.google.api-ads:dfp-axis</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.google.api.ads.dfp.axis.${googledfp.version}</pattern>
+                            <shadedPattern>com.google.api.ads.dfp.axis.shaded</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.google.api.ads.dfp.axis.utils.${googledfp.version}</pattern>
+                            <shadedPattern>com.google.api.ads.dfp.axis.utils.shaded</shadedPattern>
+                        </relocation>
+                    </relocations>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<repositories>
 		<repository>
 			<id>mulesoft-releases</id>
