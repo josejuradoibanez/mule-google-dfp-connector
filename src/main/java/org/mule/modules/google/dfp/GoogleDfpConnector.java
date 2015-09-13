@@ -251,7 +251,7 @@ public class GoogleDfpConnector {
     /**
      * Retrieve all products
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statement}
      * 
      * @return All products
      * @throws GetProductsByStatementException
@@ -265,7 +265,7 @@ public class GoogleDfpConnector {
     /**
      * Retrieve all product templates
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-product-templates-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-product-templates-by-statement}
      * 
      * @return All product templates
      * @throws GetProductTemplatesException
@@ -309,7 +309,7 @@ public class GoogleDfpConnector {
     /**
      * Retrieve custom fields by modified date
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statement}
      * 
      * @return List of CustomField
      * @throws GetCustomFieldsException
@@ -323,7 +323,7 @@ public class GoogleDfpConnector {
     /**
      * Retrieve proposals by modified date
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-proposals-by-statement}
      * 
      * @return List of Proposals
      * @throws GetProposalsException
@@ -334,10 +334,11 @@ public class GoogleDfpConnector {
         return connectionStrategy.getProposalService().getProposalsByStatement(connectionStrategy.getSession(), lastModifiedDate);
     }
     
+    
     /**
      * Retrieve proposals by modified date
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-proposal-line-items-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-proposal-line-items-by-statement}
      * 
      * @return List of Proposal LineItems
      * @throws GetProposalsException
@@ -349,9 +350,23 @@ public class GoogleDfpConnector {
     }
     
     /**
+     * Retrieve proposals by modified date
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-proposal-line-items-by-statement-filter}
+     * 
+     * @return List of Proposal LineItems
+     * @throws GetProposalsException
+     *            Get proposals exception
+     */
+    @Processor
+    public List<ProposalLineItem> getProposalLineItemsByStatementFilter(@Default("#[payload]")List<Long> proposalIds) throws GetProposalLineItemsException{
+        return connectionStrategy.getProposalLineItemService().getProposalLineItemsByStatementByFilter(connectionStrategy.getSession(), proposalIds);
+    }
+    
+    /**
      * Retrieve contacts
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-contacts-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-contacts-by-statement}
      * 
      * @return List of Contacts
      * @throws GetAllContactsException

@@ -24,14 +24,11 @@ import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateRangeType;
 import com.google.api.ads.dfp.axis.v201505.Dimension;
 import com.google.api.ads.dfp.axis.v201505.ExportFormat;
-import com.google.api.ads.dfp.axis.v201505.NumberValue;
 import com.google.api.ads.dfp.axis.v201505.ReportDownloadOptions;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
 import com.google.api.ads.dfp.axis.v201505.ReportQuery;
 import com.google.api.ads.dfp.axis.v201505.ReportQueryAdUnitView;
 import com.google.api.ads.dfp.axis.v201505.ReportServiceInterface;
-import com.google.api.ads.dfp.axis.v201505.Statement;
-import com.google.api.ads.dfp.axis.v201505.String_ValueMapEntry;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.io.Resources;
@@ -61,15 +58,6 @@ public class ReportService {
 	// private static final DimensionAttribute[] dimensionAttributes = new
 	// DimensionAttribute[] {
 	// DimensionAttribute.ADVERTISER_EXTERNAL_ID,
-	// DimensionAttribute.PROPOSAL_AGENCY_EXTERNAL_ID,
-	// DimensionAttribute.PROPOSAL_CURRENCY,
-	// DimensionAttribute.PROPOSAL_PRIMARY_SALESPERSON,
-	// DimensionAttribute.PROPOSAL_START_DATE_TIME,
-	// DimensionAttribute.PROPOSAL_END_DATE_TIME,
-	// DimensionAttribute.PROPOSAL_PO_NUMBER,
-	// DimensionAttribute.LINE_ITEM_START_DATE_TIME,
-	// DimensionAttribute.LINE_ITEM_END_DATE_TIME,
-	// DimensionAttribute.PROPOSAL_LINE_ITEM_START_DATE_TIME,
 	// DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME, };
 
 	protected ReportServiceInterface createReportService(DfpSession session) {
@@ -88,26 +76,6 @@ public class ReportService {
 			throws CreateReportException {
 
 		logger.info("Creating a report");
-		long[] proposalLineItemIds = null;
-
-		if (proposalLineIds != null && !proposalLineIds.isEmpty()) {
-			proposalLineItemIds = new long[proposalLineIds.size()];
-
-			for (int i = 0; i < proposalLineIds.size(); i++) {
-				proposalLineItemIds[i] = proposalLineIds.get(i);
-			}
-		}
-
-//		Long[] testArray = new Long[2];
-//		testArray[0] = (long) 463452;
-//		testArray[1] = (long) 463452;
-
-		String test = Joiner.on(", ").join(proposalLineIds);
-
-
-		// long i = 441732;
-		// long j = 441852;
-		// String result = i.concat
 
 		try {
 			// Get the ReportService.
@@ -118,7 +86,6 @@ public class ReportService {
 			reportQuery.setDimensions(dimensions);
 			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
 			reportQuery.setColumns(columns);
-			// reportQuery.setDimensionAttributes(dimensionAttributes);
 			reportQuery.setCustomFieldIds(customFieldsIds);
 
 			// Create report date range
@@ -127,16 +94,10 @@ public class ReportService {
 			reportQuery.setStartDate(startDateWithTimezone);
 			reportQuery.setEndDate(endDateWithTimezone);
 			
-			String testing = "PROPOSAL_LINE_ITEM_ID IN (" + test + ")";
+			String whereClauseFilter = Joiner.on(", ").join(proposalLineIds);
+			String queryStatement = "PROPOSAL_LINE_ITEM_ID IN (" + whereClauseFilter + ")";
 
-			StatementBuilder statementBuilder = new StatementBuilder().where(testing);
-
-//			String_ValueMapEntry[] values = new String_ValueMapEntry[2];
-//			values[0] = new String_ValueMapEntry("id",  );
-//			
-//			Statement statement = new Statement();
-//			statement.setQuery("WHERE PROPOSAL_LINE_ITEM_ID = :id");
-//			statement.setValues(values);
+			StatementBuilder statementBuilder = new StatementBuilder().where(queryStatement);
 
 			reportQuery.setStatement(statementBuilder.toStatement());
 
