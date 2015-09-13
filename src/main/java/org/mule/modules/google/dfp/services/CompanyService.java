@@ -53,10 +53,13 @@ public class CompanyService {
 
 			// Create a statement to get company by name
 			StatementBuilder statementBuilder = new StatementBuilder().where(
-					"lastModifiedDateTime >= :lastModifiedDateTime")
+					"lastModifiedDateTime > :lastModifiedDateTime")
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime)
+							.orderBy("lastModifiedDateTime ASC")
 			 .limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+
+			logger.info("Retrieving the last modified companies.");
 
 			int totalResultSetSize = 0;
 			List<Company> results = new ArrayList<Company>();
@@ -76,6 +79,8 @@ public class CompanyService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
+			logger.info("Retrieved " + totalResultSetSize + " companies.");
+			
 			return results;
 
 

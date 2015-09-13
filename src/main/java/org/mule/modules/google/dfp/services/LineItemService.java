@@ -39,8 +39,8 @@ public class LineItemService {
 			// Create a statement to only select line items updated or created
 			// since the lastModifiedDateTime.
 			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime >= :lastModifiedDateTime")
-					.orderBy("id ASC")
+					.where("lastModifiedDateTime > :lastModifiedDateTime")
+					.orderBy("lastModifiedDateTime ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime);

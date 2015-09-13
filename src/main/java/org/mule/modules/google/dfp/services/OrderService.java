@@ -38,8 +38,8 @@ public class OrderService {
 			// Create a statement to select all orders modified since
 			// lastModifiedDateTime.
 			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime >= :lastModifiedDateTime")
-					.orderBy("id ASC")
+					.where("lastModifiedDateTime > :lastModifiedDateTime")
+					.orderBy("lastModifiedDateTime ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime);

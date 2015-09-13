@@ -86,8 +86,8 @@ public class GoogleDfpConnector {
      * 
      */
     @Processor
-    public ReportJob createReport(Date startDate, Date endDate) throws CreateReportException {
-        return connectionStrategy.getReportService().createReport(connectionStrategy.getSession(), startDate, endDate);
+    public ReportJob createReport(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
+        return connectionStrategy.getReportService().createContractedProposalLineItemsReport(connectionStrategy.getSession(), startDate, endDate,ids);
     }
 
     /**

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.CreateReportException;
@@ -16,19 +17,23 @@ import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
 import com.google.api.ads.dfp.axis.utils.v201505.ReportDownloader;
+import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
 import com.google.api.ads.dfp.axis.v201505.ApiException;
 import com.google.api.ads.dfp.axis.v201505.Column;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateRangeType;
 import com.google.api.ads.dfp.axis.v201505.Dimension;
-import com.google.api.ads.dfp.axis.v201505.DimensionAttribute;
 import com.google.api.ads.dfp.axis.v201505.ExportFormat;
+import com.google.api.ads.dfp.axis.v201505.NumberValue;
 import com.google.api.ads.dfp.axis.v201505.ReportDownloadOptions;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
 import com.google.api.ads.dfp.axis.v201505.ReportQuery;
 import com.google.api.ads.dfp.axis.v201505.ReportQueryAdUnitView;
 import com.google.api.ads.dfp.axis.v201505.ReportServiceInterface;
+import com.google.api.ads.dfp.axis.v201505.Statement;
+import com.google.api.ads.dfp.axis.v201505.String_ValueMapEntry;
 import com.google.api.ads.dfp.lib.client.DfpSession;
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.io.Resources;
 
 public class ReportService {
@@ -49,7 +54,8 @@ public class ReportService {
 			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_GROSS_REVENUE,
 			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_NET_REVENUE,
 			Column.SALES_CONTRACT_CONTRACTED_IMPRESSIONS,
-			Column.SALES_CONTRACT_CONTRACTED_CLICKS };
+			Column.SALES_CONTRACT_CONTRACTED_CLICKS,
+			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_VAT };
 
 	// Dimension Attributes to include in the report
 	// private static final DimensionAttribute[] dimensionAttributes = new
@@ -76,11 +82,32 @@ public class ReportService {
 		return reportService;
 	}
 
-	public ReportJob createReport(DfpSession session,
-			Date startDateWithTimezone, Date endDateWithTimezone)
+	public ReportJob createContractedProposalLineItemsReport(
+			DfpSession session, Date startDateWithTimezone,
+			Date endDateWithTimezone, List<Long> proposalLineIds)
 			throws CreateReportException {
 
 		logger.info("Creating a report");
+		long[] proposalLineItemIds = null;
+
+		if (proposalLineIds != null && !proposalLineIds.isEmpty()) {
+			proposalLineItemIds = new long[proposalLineIds.size()];
+
+			for (int i = 0; i < proposalLineIds.size(); i++) {
+				proposalLineItemIds[i] = proposalLineIds.get(i);
+			}
+		}
+
+//		Long[] testArray = new Long[2];
+//		testArray[0] = (long) 463452;
+//		testArray[1] = (long) 463452;
+
+		String test = Joiner.on(", ").join(proposalLineIds);
+
+
+		// long i = 441732;
+		// long j = 441852;
+		// String result = i.concat
 
 		try {
 			// Get the ReportService.
@@ -91,7 +118,7 @@ public class ReportService {
 			reportQuery.setDimensions(dimensions);
 			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
 			reportQuery.setColumns(columns);
-//			reportQuery.setDimensionAttributes(dimensionAttributes);
+			// reportQuery.setDimensionAttributes(dimensionAttributes);
 			reportQuery.setCustomFieldIds(customFieldsIds);
 
 			// Create report date range
@@ -99,6 +126,19 @@ public class ReportService {
 
 			reportQuery.setStartDate(startDateWithTimezone);
 			reportQuery.setEndDate(endDateWithTimezone);
+			
+			String testing = "PROPOSAL_LINE_ITEM_ID IN (" + test + ")";
+
+			StatementBuilder statementBuilder = new StatementBuilder().where(testing);
+
+//			String_ValueMapEntry[] values = new String_ValueMapEntry[2];
+//			values[0] = new String_ValueMapEntry("id",  );
+//			
+//			Statement statement = new Statement();
+//			statement.setQuery("WHERE PROPOSAL_LINE_ITEM_ID = :id");
+//			statement.setValues(values);
+
+			reportQuery.setStatement(statementBuilder.toStatement());
 
 			// Create report job.
 			ReportJob reportJob = new ReportJob();

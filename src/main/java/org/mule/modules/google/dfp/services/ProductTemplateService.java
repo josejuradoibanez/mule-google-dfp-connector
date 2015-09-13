@@ -41,7 +41,7 @@ public class ProductTemplateService {
 			StatementBuilder statementBuilder = new StatementBuilder()
 					.orderBy("lastModifiedDateTime ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-//					.where("lastModifiedDateTime = :lastModifiedDateTime")
+//					.where("lastModifiedDateTime > :lastModifiedDateTime")
 //					.withBindVariableValue("lastModifiedDateTime",
 //							lastModifiedDateTime);
 

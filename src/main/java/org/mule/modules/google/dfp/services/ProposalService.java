@@ -38,9 +38,9 @@ public class ProposalService {
 			// Create a statement to only select proposals that were modified
 			// recently.
 			StatementBuilder statementBuilder = new StatementBuilder()
-					.orderBy("id ASC")
+					.orderBy("lastModifiedDateTime ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-//					.where("lastModifiedDateTime = :lastModifiedDateTime")
+//					.where("lastModifiedDateTime > :lastModifiedDateTime")
 //					.withBindVariableValue("lastModifiedDateTime",
 //							lastModifiedDate);
 
