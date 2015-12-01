@@ -14,6 +14,8 @@ import com.google.api.ads.dfp.axis.v201505.LineItem;
 import com.google.api.ads.dfp.axis.v201505.LineItemPage;
 import com.google.api.ads.dfp.axis.v201505.LineItemServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 public class LineItemService {
 
@@ -31,45 +33,152 @@ public class LineItemService {
 	}
 
 	public List<LineItem> getLineItemsByStatement(DfpSession session,
-			DateTime lastModifiedDateTime) throws GetLineItemsException {
+			DateTime lastModifiedDateTime, DateTime snapshotDateTime)
+			throws GetLineItemsException {
 		try {
 
 			LineItemServiceInterface lineItemService = createLineItemService(session);
 
-			// Create a statement to only select line items updated or created
-			// since the lastModifiedDateTime.
 			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime > :lastModifiedDateTime")
+					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
 					.orderBy("lastModifiedDateTime ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
-							lastModifiedDateTime);
-
-			// Default for total result set size.
+							lastModifiedDateTime)
+					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
 			int totalResultSetSize = 0;
-
+			int counter = 0;
+			
 			List<LineItem> results = new ArrayList<LineItem>();
-
-			logger.info("Getting all modified line items");
-
+			
 			do {
 				// Get line items by statement.
 				LineItemPage page = lineItemService
 						.getLineItemsByStatement(statementBuilder.toStatement());
+				logger.info("Current Offset is" + statementBuilder.getOffset());
 
 				if (page.getResults() != null) {
 					totalResultSetSize = page.getTotalResultSetSize();
+					logger.info("Result Set Size:" + totalResultSetSize);
 					for (LineItem lineItem : page.getResults()) {
 						results.add(lineItem);
+						counter++;
 					}
+					logger.info("Counter:" + counter);
 				}
 
 				statementBuilder
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+
+				logger.info("Offset increased to: "
+						+ statementBuilder.getOffset());
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize + " line items.");
+			System.out.printf("Number of results found: %d\n",
+					totalResultSetSize);
 
+			System.out.printf("Number of results retrieved: %d\n", counter);
+
+			return results;
+		} catch (RemoteException e) {
+			throw new GetLineItemsException(e);
+		}
+
+	}
+
+	public List<LineItem> getFilteredLineItemsByStatement(DfpSession session,
+			List<Long> orderIds) throws GetLineItemsException {
+		try {
+
+			LineItemServiceInterface lineItemService = createLineItemService(session);
+
+			List<List<Long>> orderIdsBatches = Lists.partition(orderIds, 400);
+			List<LineItem> results = new ArrayList<LineItem>();
+
+			for (List<Long> currentBatch : orderIdsBatches) {
+
+				String whereClauseFilter = Joiner.on(", ").join(currentBatch);
+				String whereQueryStatement = "orderId IN (" + whereClauseFilter
+						+ ")";
+
+				StatementBuilder statementBuilder = new StatementBuilder()
+						.where(whereQueryStatement).limit(
+								StatementBuilder.SUGGESTED_PAGE_LIMIT);
+
+				// Default for total result set size.
+				int totalResultSetSize = 0;
+				logger.info("Getting the filtered line items");
+
+				do {
+					// Get line items by statement.
+					LineItemPage page = lineItemService
+							.getLineItemsByStatement(statementBuilder
+									.toStatement());
+
+					if (page.getResults() != null) {
+						totalResultSetSize = page.getTotalResultSetSize();
+						for (LineItem lineItem : page.getResults()) {
+							results.add(lineItem);
+
+						}
+					}
+
+					statementBuilder
+							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+				} while (statementBuilder.getOffset() < totalResultSetSize);
+
+				logger.info("Retrieved " + totalResultSetSize + " line items.");
+			}
+			return results;
+
+		} catch (RemoteException e) {
+			throw new GetLineItemsException(e);
+		}
+
+	}
+
+	public List<LineItem> getLineItemsById(DfpSession session, List<Long> ids)
+			throws GetLineItemsException {
+		try {
+
+			LineItemServiceInterface lineItemService = createLineItemService(session);
+
+			List<List<Long>> idsBatches = Lists.partition(ids, 400);
+			List<LineItem> results = new ArrayList<LineItem>();
+
+			for (List<Long> currentBatch : idsBatches) {
+
+				String whereClauseFilter = Joiner.on(", ").join(currentBatch);
+				String whereQueryStatement = "id IN (" + whereClauseFilter
+						+ ")";
+
+				StatementBuilder statementBuilder = new StatementBuilder()
+						.where(whereQueryStatement).limit(
+								StatementBuilder.SUGGESTED_PAGE_LIMIT);
+
+				// Default for total result set size.
+				int totalResultSetSize = 0;
+				logger.info("Getting the filtered line items by ID.");
+
+				do {
+					// Get line items by statement.
+					LineItemPage page = lineItemService
+							.getLineItemsByStatement(statementBuilder
+									.toStatement());
+
+					if (page.getResults() != null) {
+						totalResultSetSize = page.getTotalResultSetSize();
+						for (LineItem lineItem : page.getResults()) {
+							results.add(lineItem);
+						}
+					}
+
+					statementBuilder
+							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+				} while (statementBuilder.getOffset() < totalResultSetSize);
+
+				logger.info("Retrieved " + totalResultSetSize + " line items.");
+			}
 			return results;
 
 		} catch (RemoteException e) {

@@ -46,18 +46,20 @@ public class CompanyService {
 	}
 
 	public List<Company> getAllCompanies(DfpSession session,
-			DateTime lastModifiedDateTime) throws GetAllCompaniesException {
+			DateTime lastModifiedDateTime, DateTime snapshotDateTime)
+			throws GetAllCompaniesException {
 		try {
 			// Get the CompanyService.
 			CompanyServiceInterface companyService = createCompanyService(session);
 
 			// Create a statement to get company by name
-			StatementBuilder statementBuilder = new StatementBuilder().where(
-					"lastModifiedDateTime > :lastModifiedDateTime")
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
+					.orderBy("lastModifiedDateTime ASC")
+					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime)
-							.orderBy("lastModifiedDateTime ASC")
-			 .limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
 
 			logger.info("Retrieving the last modified companies.");
 
@@ -80,9 +82,8 @@ public class CompanyService {
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
 			logger.info("Retrieved " + totalResultSetSize + " companies.");
-			
-			return results;
 
+			return results;
 
 		} catch (ApiException e) {
 			throw new GetAllCompaniesException(e);

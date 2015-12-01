@@ -30,7 +30,8 @@ public class OrderService {
 	}
 
 	public List<Order> getOrdersByStatement(DfpSession session,
-			DateTime lastModifiedDateTime) throws GetOrdersException {
+			DateTime lastModifiedDateTime, DateTime snapshotDateTime)
+			throws GetOrdersException {
 		try {
 
 			OrderServiceInterface ordersInterface = createOrderService(session);
@@ -38,18 +39,19 @@ public class OrderService {
 			// Create a statement to select all orders modified since
 			// lastModifiedDateTime.
 			StatementBuilder statementBuilder = new StatementBuilder()
-					.where("lastModifiedDateTime > :lastModifiedDateTime")
+					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
 					.orderBy("lastModifiedDateTime ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
-							lastModifiedDateTime);
+							lastModifiedDateTime)
+					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
 
 			// Default for total result set size.
 			int totalResultSetSize = 0;
 			List<Order> results = new ArrayList<Order>();
 
 			logger.info("Getting all modified orders.");
-			
+
 			do {
 				// Get orders by statement.
 				OrderPage page = ordersInterface
@@ -67,7 +69,7 @@ public class OrderService {
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
 			logger.info("Retrieved " + totalResultSetSize + " orders.");
-			
+
 			return results;
 		} catch (ApiException e) {
 			throw new GetOrdersException(e);

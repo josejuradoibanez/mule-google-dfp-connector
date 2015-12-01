@@ -32,18 +32,19 @@ public class ProductTemplateService {
 	}
 
 	public List<ProductTemplate> getProductTemplatesByStatement(
-			DfpSession session, DateTime lastModifiedDateTime)
-			throws GetProductTemplatesException {
+			DfpSession session, DateTime lastModifiedDateTime,
+			DateTime snapshotDateTime) throws GetProductTemplatesException {
 		try {
 
 			ProductTemplateServiceInterface productTemplateService = createProductTemplateService(session);
 
 			StatementBuilder statementBuilder = new StatementBuilder()
+					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
 					.orderBy("lastModifiedDateTime ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-//					.where("lastModifiedDateTime > :lastModifiedDateTime")
-//					.withBindVariableValue("lastModifiedDateTime",
-//							lastModifiedDateTime);
+					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
+					.withBindVariableValue("lastModifiedDateTime",
+							lastModifiedDateTime)
+					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
 
 			int totalResultSetSize = 0;
 

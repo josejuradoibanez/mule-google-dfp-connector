@@ -18,7 +18,8 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class ProposalService {
 
-	private static final Logger logger = Logger.getLogger(ProposalService.class);
+	private static final Logger logger = Logger
+			.getLogger(ProposalService.class);
 
 	protected ProposalServiceInterface createProposalService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
@@ -31,18 +32,20 @@ public class ProposalService {
 	}
 
 	public List<Proposal> getProposalsByStatement(DfpSession session,
-			DateTime lastModifiedDate) throws GetProposalsException {
+			DateTime lastModifiedDateTime, DateTime snapshotDateTime)
+			throws GetProposalsException {
 		try {
 			ProposalServiceInterface proposalService = createProposalService(session);
 
 			// Create a statement to only select proposals that were modified
 			// recently.
 			StatementBuilder statementBuilder = new StatementBuilder()
+					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
 					.orderBy("lastModifiedDateTime ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-//					.where("lastModifiedDateTime > :lastModifiedDateTime")
-//					.withBindVariableValue("lastModifiedDateTime",
-//							lastModifiedDate);
+					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
+					.withBindVariableValue("lastModifiedDateTime",
+							lastModifiedDateTime)
+					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
 
 			// Default for total result set size.
 			int totalResultSetSize = 0;
@@ -68,7 +71,7 @@ public class ProposalService {
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
 			logger.info("Retrieved " + totalResultSetSize + " proposals.");
-			
+
 			return results;
 		} catch (ApiException e) {
 			throw new GetProposalsException(e);

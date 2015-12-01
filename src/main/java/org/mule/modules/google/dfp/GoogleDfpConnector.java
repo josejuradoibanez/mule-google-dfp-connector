@@ -27,7 +27,8 @@ import org.mule.modules.google.dfp.exceptions.GetProductTemplatesException;
 import org.mule.modules.google.dfp.exceptions.GetProductsByStatementException;
 import org.mule.modules.google.dfp.exceptions.GetProposalLineItemsException;
 import org.mule.modules.google.dfp.exceptions.GetProposalsException;
-import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
+import org.mule.modules.google.dfp.exceptions.GetUsersException;
+import org.mule.modules.google.dfp.exceptions.ReconciliationReportException;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportRowException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 import org.mule.modules.google.dfp.exceptions.TooManyAdvertisersFoundException;
@@ -39,6 +40,7 @@ import org.mule.modules.google.dfp.strategy.GoogleDfpConnectionStrategy;
 import com.google.api.ads.dfp.axis.v201505.Company;
 import com.google.api.ads.dfp.axis.v201505.Contact;
 import com.google.api.ads.dfp.axis.v201505.CustomField;
+import com.google.api.ads.dfp.axis.v201505.CustomFieldOption;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateTime;
 import com.google.api.ads.dfp.axis.v201505.LineItem;
@@ -47,8 +49,10 @@ import com.google.api.ads.dfp.axis.v201505.Product;
 import com.google.api.ads.dfp.axis.v201505.ProductTemplate;
 import com.google.api.ads.dfp.axis.v201505.Proposal;
 import com.google.api.ads.dfp.axis.v201505.ProposalLineItem;
+import com.google.api.ads.dfp.axis.v201505.ReconciliationReport;
 import com.google.api.ads.dfp.axis.v201505.ReconciliationReportRow;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
+import com.google.api.ads.dfp.axis.v201505.User;
 
 /**
  * Google DFP Connector
@@ -64,17 +68,10 @@ public class GoogleDfpConnector {
     @Config
     GoogleDfpConnectionStrategy connectionStrategy;
 
-    // experimental processor to test out dynamic datasense to get visual selection of Dimension
-//    @Processor
-//    public Object myProcessor(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.BOTH) String dimension, @Default("#[payload]") Map<String, Object> types, Date startDate,
-//            Date endDate) throws CreateReportException {
-//        return connectionStrategy.getReportService().createReport(connectionStrategy.getSession(), startDate, endDate);
-//    }
-
     /**
      * Creates a report given a date range
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-report}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-contracted-report}
      * 
      * @param startDate
      *            the start of the report date
@@ -86,10 +83,176 @@ public class GoogleDfpConnector {
      * 
      */
     @Processor
-    public ReportJob createReport(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
+    public ReportJob createContractedReport(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
         return connectionStrategy.getReportService().createContractedProposalLineItemsReport(connectionStrategy.getSession(), startDate, endDate,ids);
     }
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-contracted-report-with-ad-units}
+     * 
+     * @param startDate
+     *            the start of the report date
+     * @param endDate
+     *            the end of the report date
+     * @return The report job
+     * @throws CreateReportException
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob createContractedReportWithAdUnits(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
+        return connectionStrategy.getReportService().createContractedProposalLineItemsReportWithAdUnits(connectionStrategy.getSession(), startDate, endDate,ids);
+    }
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-reach-report}
+     * 
+     * @param startDate
+     *            the start of the report date
+     * @param endDate
+     *            the end of the report date
+     * @return The report job
+     * @throws CreateReportException
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob createReachReport(Date startDate, Date endDate) throws CreateReportException {
+        return connectionStrategy.getReportService().createReachReport(connectionStrategy.getSession(), startDate, endDate);
+    }
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-if-report-is-ready}
+     * 
+     * @param startDate
+     *            the start of the report date
+     * @param endDate
+     *            the end of the report date
+     * @return The report job
+     * @throws CreateReportException
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob createIfReportIsReady(Date startDate, Date endDate) throws CreateReportException {
+        return connectionStrategy.getReportService().checkIfReportIsReady(connectionStrategy.getSession(), startDate, endDate);
+    }
+    
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-reach-lifetime-report}
+     * 
+     * @return The report job
+     * @throws CreateReportException
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob createReachLifetimeReport() throws CreateReportException {
+        return connectionStrategy.getReportService().createReachLifetimeReport(connectionStrategy.getSession());
+    }
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-reach-lifetime-report}
+     * 
+     * @return The report job
+     * @throws CreateReportException
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob createAllActiveLineItemsReport(Date startDate, Date endDate) throws CreateReportException {
+        return connectionStrategy.getReportService().createAllActiveLineItemsReport(connectionStrategy.getSession(),startDate,endDate);
+    }
+    
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-actuals-report}
+     * 
+     * @param startDate
+     *            the start of the report date
+     * @param endDate
+     *            the end of the report date
+     * @return The report job
+     * @throws CreateReportException
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob createActualsReports(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
+        return connectionStrategy.getReportService().createActualsReport(connectionStrategy.getSession(), startDate, endDate,ids);
+    }
 
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:create-actuals-without-ads-report}
+     * 
+     * @param startDate
+     *            the start of the report date
+     * @param endDate
+     *            the end of the report date
+     * @return The report job
+     * @throws CreateReportException
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob createActualsReportsWithoutAds(Date startDate, Date endDate, List<Long> ids) throws CreateReportException {
+        return connectionStrategy.getReportService().createActualsReportWithoutAds(connectionStrategy.getSession(), startDate, endDate,ids);
+    }
+
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:active-line-items-report}
+     * 
+     * @param startDate
+     *            the start of the report date
+     * @param endDate
+     *            the end of the report date
+     * @return The report job
+     * @throws CreateReportException 
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob activeLineItemsReport(Date startDate, Date endDate) throws CreateReportException {
+        return connectionStrategy.getReportService().activeLineItemsReport(connectionStrategy.getSession(), startDate, endDate);
+    }
+    
+    /**
+     * Creates a report given a date range
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:age-and-gender-report}
+     * 
+     * @param startDate
+     *            the start of the report date
+     * @param endDate
+     *            the end of the report date
+     * @return The report job
+     * @throws CreateReportException 
+     *             Create Report Exception
+     * 
+     */
+    @Processor
+    public ReportJob ageAndGenderReport(Date startDate, Date endDate, List<Integer> lineItems) throws CreateReportException {
+        return connectionStrategy.getReportService().ageAndGenderReport(connectionStrategy.getSession(), startDate, endDate, lineItems);
+    }
+    
     /**
      * Download a report from the Google DFP services
      * 
@@ -116,8 +279,8 @@ public class GoogleDfpConnector {
      *             Get All Companies Exception
      */
     @Processor
-    public List<Company> getAllCompanies(@Default("#[payload]") DateTime lastModifiedDate) throws GetAllCompaniesException {
-        return connectionStrategy.getCompanyService().getAllCompanies(connectionStrategy.getSession(), lastModifiedDate);
+    public List<Company> getAllCompanies(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetAllCompaniesException {
+        return connectionStrategy.getCompanyService().getAllCompanies(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
     }
 
     /**
@@ -164,21 +327,20 @@ public class GoogleDfpConnector {
      * @param startDate
      *            Start date used for searching reconciliation reports
      * @return List of reconciliation report ids
-     * @throws ReconciliationReportByIdException
+     * @throws ReconciliationReportException
      *             Reconciliation Report By ID Exception
      */
     @Processor
-    public List<Long> getReconciliationReportIdsByStartDate(@Default("#[payload]") Date startDate) throws ReconciliationReportByIdException {
+    public List<ReconciliationReport> getReconciliationReportIdsByStartDate(@Default("#[payload]") Date startDate) throws ReconciliationReportException {
         try {
             String dateFormat = "%04d-%02d-%02d";
             String stringDate = String.format(dateFormat, startDate.getYear(), startDate.getMonth(), startDate.getDay());
-            return connectionStrategy.getReconciliationReportService().getReconciliationReportIdsByStartDate(connectionStrategy.getSession(), stringDate);
+            return connectionStrategy.getReconciliationReportService().getReconciliationReportByStartDate(connectionStrategy.getSession(), stringDate);
         } catch (Exception e) {
-            throw new ReconciliationReportByIdException(e);
+            throw new ReconciliationReportException(e);
         }
-
     }
-
+    
     /**
      * Retrieve Reconciliation report rows given the reconciliation report ID, order ID and line item ID
      * 
@@ -258,8 +420,8 @@ public class GoogleDfpConnector {
      *             Get Products Exception
      */
     @Processor
-    public List<Product> getProductsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProductsByStatementException{
-        return connectionStrategy.getProductService().getProductsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    public List<Product> getProductsByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetProductsByStatementException{
+        return connectionStrategy.getProductService().getProductsByStatement(connectionStrategy.getSession(), lastModifiedDate , snapshotDateTime );
     }
     
     /**
@@ -272,30 +434,57 @@ public class GoogleDfpConnector {
      *             Get Product Templates Exception
      */
     @Processor
-    public List<ProductTemplate> getProductTemplatesByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProductTemplatesException{
-        return connectionStrategy.getProductTemplateService().getProductTemplatesByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    public List<ProductTemplate> getProductTemplatesByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetProductTemplatesException{
+        return connectionStrategy.getProductTemplateService().getProductTemplatesByStatement(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime );
     }
     
     
     /**
      * Retrieve line items by modified date
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-line-items-by-statament}
      * 
      * @return LineItem 
      * @throws GetLineItemsException
      *             Get Line Items Exception
      */
     @Processor
-    public List<LineItem> getLineItemsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetLineItemsException{
-        return connectionStrategy.getLineItemService().getLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    public List<LineItem> getLineItemsByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetLineItemsException{
+        return connectionStrategy.getLineItemService().getLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
     }
     
+    /**
+     * Retrieve line items filtered by order IDs
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-filtered-line-items-by-statement}
+     * 
+     * @return LineItem 
+     * @throws GetLineItemsException
+     *             Get Line Items Exception
+     */
+    @Processor
+    public List<LineItem> getFilteredLineItemsByStatement(@Default("#[payload]") List<Long> orderIds) throws GetLineItemsException{
+        return connectionStrategy.getLineItemService().getFilteredLineItemsByStatement(connectionStrategy.getSession(), orderIds);
+    }
+    
+    /**
+     * Retrieve line items filtered by order IDs
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-filtered-line-items-by-statement}
+     * 
+     * @return LineItem 
+     * @throws GetLineItemsException
+     *             Get Line Items Exception
+     */
+    @Processor
+    public List<LineItem> getLineItemsById(@Default("#[payload]") List<Long> ids) throws GetLineItemsException{
+        return connectionStrategy.getLineItemService().getLineItemsById(connectionStrategy.getSession(),ids);
+    }
     
     /**
      * Retrieve custom fields by modified date
      * 
-     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-products-by-statament}
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-custom-fields-by-statement}
      * 
      * @return CustomField
      * @throws GetCustomFieldsException
@@ -304,6 +493,21 @@ public class GoogleDfpConnector {
     @Processor
     public List<CustomField> getCustomFieldsByStatement() throws GetCustomFieldsException{
         return connectionStrategy.getCustomFieldService().getCustomFieldsByStatement(connectionStrategy.getSession());
+    }
+    
+    
+    /**
+     * Retrieve custom field options
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-custom-field-option}
+     * 
+     * @return CustomField
+     * @throws GetCustomFieldsException
+     *            Get custom fields exception
+     */
+    @Processor
+    public CustomFieldOption getCustomFieldOption(Long id) throws GetCustomFieldsException{
+        return connectionStrategy.getCustomFieldService().getCustomFieldOption(connectionStrategy.getSession(), id);
     }
     
     /**
@@ -316,8 +520,8 @@ public class GoogleDfpConnector {
      *            Get custom fields exception
      */
     @Processor
-    public List<Order> getOrdersByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetOrdersException{
-        return connectionStrategy.getOrderService().getOrdersByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    public List<Order> getOrdersByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetOrdersException{
+        return connectionStrategy.getOrderService().getOrdersByStatement(connectionStrategy.getSession(), lastModifiedDate , snapshotDateTime);
     }
     
     /**
@@ -330,8 +534,8 @@ public class GoogleDfpConnector {
      *            Get proposals exception
      */
     @Processor
-    public List<Proposal> getProposalsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProposalsException{
-        return connectionStrategy.getProposalService().getProposalsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    public List<Proposal> getProposalsByStatement(DateTime lastModifiedDate, DateTime snapshotDateTime) throws GetProposalsException{
+        return connectionStrategy.getProposalService().getProposalsByStatement(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
     }
     
     
@@ -345,12 +549,25 @@ public class GoogleDfpConnector {
      *            Get proposals exception
      */
     @Processor
-    public List<ProposalLineItem> getProposalLineItemsByStatement(@Default("#[payload]") DateTime lastModifiedDate) throws GetProposalLineItemsException{
-        return connectionStrategy.getProposalLineItemService().getProposalLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate);
+    public List<ProposalLineItem> getProposalLineItemsByStatement( DateTime lastModifiedDate,DateTime snapshotDateTime) throws GetProposalLineItemsException{
+        return connectionStrategy.getProposalLineItemService().getProposalLineItemsByStatement(connectionStrategy.getSession(), lastModifiedDate, snapshotDateTime);
     }
     
     /**
-     * Retrieve proposals by modified date
+     * Retrieve proposals by IDs
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-proposal-line-items-by-id}
+     * 
+     * @return List of Proposal LineItems
+     * @throws GetProposalsException
+     *            Get proposals exception
+     */
+    @Processor
+    public List<ProposalLineItem> getProposalLineItemsById(@Default("#[payload]")List<Long> ids) throws GetProposalLineItemsException{
+        return connectionStrategy.getProposalLineItemService().getProposalLineItemsById(connectionStrategy.getSession(), ids);
+    }
+    /**
+     * Retrieve proposals by proposal IDs
      * 
      * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-proposal-line-items-by-statement-filter}
      * 
@@ -375,6 +592,21 @@ public class GoogleDfpConnector {
     @Processor
     public List<Contact> getContactsByStatement() throws GetAllContactsException{
         return connectionStrategy.getContactService().getContactsByStatement(connectionStrategy.getSession());
+    }
+    
+    
+    /**
+     * Retrieve users
+     * 
+     * {@sample.xml ../../../doc/google-dfp-connector.xml.sample google-dfp:get-users-by-statement}
+     * 
+     * @return List of Users
+     * @throws GetUsersException
+     *            Get users exception
+     */
+    @Processor
+    public List<User> getUsersByStatement() throws GetUsersException{
+        return connectionStrategy.getUserService().getUsersByStatement(connectionStrategy.getSession());
     }
     
     /**

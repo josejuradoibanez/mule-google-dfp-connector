@@ -23,6 +23,7 @@ import com.google.api.ads.dfp.axis.v201505.Column;
 import com.google.api.ads.dfp.axis.v201505.Date;
 import com.google.api.ads.dfp.axis.v201505.DateRangeType;
 import com.google.api.ads.dfp.axis.v201505.Dimension;
+import com.google.api.ads.dfp.axis.v201505.DimensionAttribute;
 import com.google.api.ads.dfp.axis.v201505.ExportFormat;
 import com.google.api.ads.dfp.axis.v201505.ReportDownloadOptions;
 import com.google.api.ads.dfp.axis.v201505.ReportJob;
@@ -40,26 +41,6 @@ public class ReportService {
 	// Set the ID of the custom field to include in the report.
 	private long[] customFieldsIds;
 
-	// Dimensions to include in the report
-	private static final Dimension[] dimensions = new Dimension[] {
-			Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.DATE,
-			Dimension.PRODUCT_TEMPLATE_ID };
-
-	// Columns to include in the report
-	private static final Column[] columns = new Column[] {
-			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_AGENCY_COMMISSION,
-			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_GROSS_REVENUE,
-			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_NET_REVENUE,
-			Column.SALES_CONTRACT_CONTRACTED_IMPRESSIONS,
-			Column.SALES_CONTRACT_CONTRACTED_CLICKS,
-			Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_VAT };
-
-	// Dimension Attributes to include in the report
-	// private static final DimensionAttribute[] dimensionAttributes = new
-	// DimensionAttribute[] {
-	// DimensionAttribute.ADVERTISER_EXTERNAL_ID,
-	// DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME, };
-
 	protected ReportServiceInterface createReportService(DfpSession session) {
 		DfpServices dfpServices = new DfpServices();
 
@@ -75,7 +56,138 @@ public class ReportService {
 			Date endDateWithTimezone, List<Long> proposalLineIds)
 			throws CreateReportException {
 
-		logger.info("Creating a report");
+		logger.info("Creating the contracted Proposal Line Items report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] {
+				Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.DATE };
+
+		DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] { DimensionAttribute.PROPOSAL_LINE_ITEM_SIZE };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_AGENCY_COMMISSION,
+				Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_GROSS_REVENUE,
+				Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_NET_REVENUE,
+				Column.SALES_CONTRACT_CONTRACTED_IMPRESSIONS,
+				Column.SALES_CONTRACT_CONTRACTED_CLICKS,
+				Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_VAT };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setDimensionAttributes(dimensionAttributes);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
+			reportQuery.setCustomFieldIds(customFieldsIds);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			String whereClauseFilter = Joiner.on(", ").join(proposalLineIds);
+			String queryStatement = "PROPOSAL_LINE_ITEM_ID IN ("
+					+ whereClauseFilter + ")";
+
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.where(queryStatement);
+
+			reportQuery.setStatement(statementBuilder.toStatement());
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createContractedProposalLineItemsReportWithAdUnits(
+			DfpSession session, Date startDateWithTimezone,
+			Date endDateWithTimezone, List<Long> proposalLineIds)
+			throws CreateReportException {
+
+		logger.info("Creating the contracted Proposal Line Items with Ad Units report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] {
+				Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.DATE,
+				Dimension.AD_UNIT_ID, Dimension.AD_UNIT_NAME };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			String whereClauseFilter = Joiner.on(", ").join(proposalLineIds);
+			String queryStatement = "PROPOSAL_LINE_ITEM_ID IN ("
+					+ whereClauseFilter + ")";
+
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.where(queryStatement);
+
+			reportQuery.setStatement(statementBuilder.toStatement());
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createReachLifetimeReport(DfpSession session)
+			throws CreateReportException {
+
+		logger.info("Creating the reach lifetime report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] { Column.REACH,
+				Column.REACH_AVERAGE_REVENUE, Column.REACH_FREQUENCY };
 
 		try {
 			// Get the ReportService.
@@ -86,18 +198,396 @@ public class ReportService {
 			reportQuery.setDimensions(dimensions);
 			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
 			reportQuery.setColumns(columns);
-			reportQuery.setCustomFieldIds(customFieldsIds);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.REACH_LIFETIME);
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createReachReport(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Creating the reach report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.MONTH_AND_YEAR };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] { Column.REACH,
+				Column.REACH_AVERAGE_REVENUE, Column.REACH_FREQUENCY };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
 
 			// Create report date range
 			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
 
 			reportQuery.setStartDate(startDateWithTimezone);
 			reportQuery.setEndDate(endDateWithTimezone);
-			
-			String whereClauseFilter = Joiner.on(", ").join(proposalLineIds);
-			String queryStatement = "PROPOSAL_LINE_ITEM_ID IN (" + whereClauseFilter + ")";
 
-			StatementBuilder statementBuilder = new StatementBuilder().where(queryStatement);
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createActualsReport(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone,
+			List<Long> lineItemIds) throws CreateReportException {
+
+		logger.info("Creating the actuals report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.DATE, Dimension.AD_UNIT_ID, Dimension.AD_UNIT_NAME };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
+				Column.TOTAL_LINE_ITEM_LEVEL_ALL_REVENUE,
+				Column.TOTAL_LINE_ITEM_LEVEL_CTR,
+				Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_UNIFIED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_UNIFIED_AGENCY_COMMISSION,
+				Column.UNIFIED_REVENUE_UNIFIED_GROSS_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			String whereClauseFilter = Joiner.on(", ").join(lineItemIds);
+			String queryStatement = "LINE_ITEM_ID IN (" + whereClauseFilter
+					+ ")";
+
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.where(queryStatement);
+
+			reportQuery.setStatement(statementBuilder.toStatement());
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createActualsReportWithoutAds(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone,
+			List<Long> lineItemIds) throws CreateReportException {
+
+		logger.info("Creating the actuals report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.DATE };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
+				Column.TOTAL_LINE_ITEM_LEVEL_ALL_REVENUE,
+				Column.TOTAL_LINE_ITEM_LEVEL_CTR,
+				Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_UNIFIED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_UNIFIED_AGENCY_COMMISSION,
+				Column.UNIFIED_REVENUE_UNIFIED_GROSS_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			String whereClauseFilter = Joiner.on(", ").join(lineItemIds);
+			String queryStatement = "LINE_ITEM_ID IN (" + whereClauseFilter
+					+ ")";
+
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.where(queryStatement);
+
+			reportQuery.setStatement(statementBuilder.toStatement());
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob activeLineItemsReport(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Creating the actuals report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.DATE };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
+				Column.TOTAL_LINE_ITEM_LEVEL_ALL_REVENUE,
+				Column.TOTAL_LINE_ITEM_LEVEL_CTR,
+				Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNRECONCILED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_AGENCY_COMMISSION,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_UNIFIED_NET_REVENUE,
+				Column.UNIFIED_REVENUE_UNIFIED_AGENCY_COMMISSION,
+				Column.UNIFIED_REVENUE_UNIFIED_GROSS_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.HIERARCHICAL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createAllActiveLineItemsReport(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Creating the ongoing line items report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.PROPOSAL_LINE_ITEM_ID };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_NET_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob checkIfReportIsReady(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Checking if actuals reports are ready");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.DATE,
+				Dimension.HOUR };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] { Column.TOTAL_INVENTORY_LEVEL_IMPRESSIONS };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob ageAndGenderReport(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone,
+			List<Integer> lineItems) throws CreateReportException {
+
+		logger.info("Creating the age and gender report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.CUSTOM_CRITERIA,
+				Dimension.DATE, Dimension.LINE_ITEM_ID, Dimension.PROPOSAL_ID };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CLICKS };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			String whereClauseFilter = Joiner.on(", ").join(lineItems);
+			String queryStatement = "LINE_ITEM_ID IN (" + whereClauseFilter
+					+ ")";
+			StatementBuilder statementBuilder = new StatementBuilder()
+					.where(queryStatement);
 
 			reportQuery.setStatement(statementBuilder.toStatement());
 

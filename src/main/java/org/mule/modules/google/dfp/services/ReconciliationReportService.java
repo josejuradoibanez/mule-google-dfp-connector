@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.mule.modules.google.dfp.exceptions.ReconciliationReportByIdException;
+import org.mule.modules.google.dfp.exceptions.ReconciliationReportException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
 import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
@@ -22,7 +22,8 @@ import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class ReconciliationReportService {
 
-	private static final Logger logger  = Logger.getLogger(ReconciliationReportService.class);
+	private static final Logger logger = Logger
+			.getLogger(ReconciliationReportService.class);
 
 	protected ReconciliationReportServiceInterface createReconciliationReportService(
 			DfpSession session) {
@@ -34,23 +35,22 @@ public class ReconciliationReportService {
 		return reconciliationReportService;
 	}
 
-	public List<Long> getReconciliationReportIdsByStartDate(DfpSession session,
-			String startDate) throws ReconciliationReportByIdException {
+	public List<ReconciliationReport> getReconciliationReportByStartDate(
+			DfpSession session, String startDate)
+			throws ReconciliationReportException {
 
 		try {
 			ReconciliationReportServiceInterface reconciliationReportService = createReconciliationReportService(session);
 
-			// Create statement to get the report for the specified date and
-			// status.
 			StatementBuilder statementBuilder = new StatementBuilder()
 					.where("startDate = :startDate")
 					.withBindVariableValue("startDate", startDate)
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-			// Default for total result set size.
+
 			int totalResultSetSize = 0;
 
-			// List to store the report IDs returned by the query.
-			List<Long> reconciliationReportIds = new ArrayList<Long>();
+			// List to store the report returned by the query.
+			List<ReconciliationReport> reconciliationReportList = new ArrayList<ReconciliationReport>();
 
 			do {
 				ReconciliationReportPage page = reconciliationReportService
@@ -61,8 +61,7 @@ public class ReconciliationReportService {
 					totalResultSetSize = page.getTotalResultSetSize();
 					for (ReconciliationReport reconciliationReport : page
 							.getResults()) {
-						reconciliationReportIds.add(reconciliationReport
-								.getId());
+						reconciliationReportList.add(reconciliationReport);
 					}
 				}
 
@@ -70,14 +69,15 @@ public class ReconciliationReportService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Number of results found: " + totalResultSetSize + ".");
-			return reconciliationReportIds;
+			logger.info("Number of Reconciliation Reports found: " + totalResultSetSize + ".");
+			return reconciliationReportList;
+			
 		} catch (NullPointerException e) {
-			throw new ReconciliationReportByIdException(e);
+			throw new ReconciliationReportException(e);
 		} catch (ApiException e) {
-			throw new ReconciliationReportByIdException(e);
+			throw new ReconciliationReportException(e);
 		} catch (RemoteException e) {
-			throw new ReconciliationReportByIdException(e);
+			throw new ReconciliationReportException(e);
 		}
 	}
 

@@ -38,6 +38,7 @@ import org.mule.modules.google.dfp.services.ProposalService;
 import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
 import org.mule.modules.google.dfp.services.ReconciliationReportService;
 import org.mule.modules.google.dfp.services.ReportService;
+import org.mule.modules.google.dfp.services.UserService;
 
 import com.google.api.ads.common.lib.auth.OfflineCredentials;
 import com.google.api.ads.common.lib.auth.OfflineCredentials.Api;
@@ -64,6 +65,7 @@ public class GoogleDfpConnectionStrategy {
 	private ProposalService proposalService;
 	private ProposalLineItemService proposalLineItemService;
 	private ProductService productService;
+	private UserService userService;
 	private ProductTemplateService productTemplateService;
 	private ReconciliationReportService reconciliationReportService;
 	private ReconciliationReportRowService reconciliationReportRowService;
@@ -168,6 +170,8 @@ public class GoogleDfpConnectionStrategy {
 
 			// Initialize and configure Proposal Service
 			proposalService = new ProposalService();
+			
+			userService = new UserService();
 
 			// Initialize and configure Proposal Line Item Service
 			proposalLineItemService = new ProposalLineItemService();
@@ -325,6 +329,14 @@ public class GoogleDfpConnectionStrategy {
 
 	public void setCompanyService(CompanyService companyService) {
 		this.companyService = companyService;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 	public ReconciliationReportService getReconciliationReportService() {

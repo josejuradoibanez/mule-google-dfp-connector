@@ -31,20 +31,21 @@ public class ProductService {
 	}
 
 	public List<Product> getProductsByStatement(DfpSession session,
-			DateTime lastModifiedDateTime)
+			DateTime lastModifiedDateTime, DateTime snapshotDateTime)
 			throws GetProductsByStatementException {
 		try {
 
 			ProductServiceInterface productService = createProductService(session);
 
 			StatementBuilder statementBuilder = new StatementBuilder()
+					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
 					.orderBy("lastModifiedDateTime ASC")
-					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT);
-//					.where("lastModifiedDateTime > :lastModifiedDateTime")
-//					.withBindVariableValue("lastModifiedDateTime",
-//							lastModifiedDateTime);
+					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
+					.withBindVariableValue("lastModifiedDateTime",
+							lastModifiedDateTime)
+					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
 
-			int totalResultSetSize = 0; 
+			int totalResultSetSize = 0;
 			List<Product> results = new ArrayList<Product>();
 			logger.info("Retrieving modified products.");
 

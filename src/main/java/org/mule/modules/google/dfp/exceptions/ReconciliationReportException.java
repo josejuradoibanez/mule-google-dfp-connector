@@ -5,14 +5,14 @@
 
 package org.mule.modules.google.dfp.exceptions;
 
-public class ReconciliationReportByIdException extends Exception {
+public class ReconciliationReportException extends Exception {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 55882828;
 
-	public ReconciliationReportByIdException(Throwable e) {
+	public ReconciliationReportException(Throwable e) {
 		super(e);
 	}
 }
