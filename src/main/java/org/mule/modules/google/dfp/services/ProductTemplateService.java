@@ -50,16 +50,19 @@ public class ProductTemplateService {
 
 			List<ProductTemplate> results = new ArrayList<ProductTemplate>();
 			logger.info("Retrieving modified product templates.");
-
+			
+			ProductTemplatePage initialPage = productTemplateService
+					.getProductTemplatesByStatement(statementBuilder
+							.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
+			
 			do {
 				// Get product templates by statement.
-				ProductTemplatePage page;
-				page = productTemplateService
+				ProductTemplatePage page = productTemplateService
 						.getProductTemplatesByStatement(statementBuilder
 								.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
 					for (ProductTemplate productTemplate : page.getResults()) {
 						results.add(productTemplate);
 					}
@@ -69,8 +72,8 @@ public class ProductTemplateService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize
-					+ " product templates.");
+			logger.info("Number of results found: " + totalResultSetSize);
+			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
 

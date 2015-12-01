@@ -41,7 +41,7 @@ public class CustomFieldService {
 			// Default for total result set size.
 			CustomFieldOption result = customFieldService
 					.getCustomFieldOption(id);
-			
+
 			return result;
 		} catch (ApiException e) {
 			throw new GetCustomFieldsException(e);
@@ -66,15 +66,19 @@ public class CustomFieldService {
 
 			// Default for total result set size.
 			int totalResultSetSize = 0;
-
 			List<CustomField> results = new ArrayList<CustomField>();
+			
+			CustomFieldPage initialPage = customFieldService
+					.getCustomFieldsByStatement(statementBuilder
+							.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
+			
 			do {
 				CustomFieldPage page = customFieldService
 						.getCustomFieldsByStatement(statementBuilder
 								.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
 					for (CustomField customField : page.getResults()) {
 						results.add(customField);
 					}
@@ -84,7 +88,9 @@ public class CustomFieldService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize + " custom fields.");
+			logger.info("Number of results found: " + totalResultSetSize);
+
+			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
 

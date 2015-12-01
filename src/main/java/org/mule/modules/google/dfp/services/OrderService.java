@@ -52,13 +52,17 @@ public class OrderService {
 
 			logger.info("Getting all modified orders.");
 
+			OrderPage initialPage = ordersInterface
+					.getOrdersByStatement(statementBuilder.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
+			
 			do {
 				// Get orders by statement.
 				OrderPage page = ordersInterface
 						.getOrdersByStatement(statementBuilder.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
+					
 					for (Order order : page.getResults()) {
 						results.add(order);
 					}
@@ -68,7 +72,9 @@ public class OrderService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize + " orders.");
+			logger.info("Number of results found: " + totalResultSetSize);
+
+			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
 		} catch (ApiException e) {

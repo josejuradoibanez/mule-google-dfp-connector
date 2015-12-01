@@ -56,7 +56,11 @@ public class ProposalLineItemService {
 			List<ProposalLineItem> results = new ArrayList<ProposalLineItem>();
 
 			logger.info("Getting all modified proposal line items.");
-
+			
+			ProposalLineItemPage initialPage = proposalLineItemService
+					.getProposalLineItemsByStatement(statementBuilder
+							.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
 			do {
 				// Get proposal line items by statement.
 				ProposalLineItemPage page = proposalLineItemService
@@ -64,7 +68,6 @@ public class ProposalLineItemService {
 								.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
 					for (ProposalLineItem proposalLineItem : page.getResults()) {
 						results.add(proposalLineItem);
 					}
@@ -74,8 +77,9 @@ public class ProposalLineItemService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize
-					+ " proposal line items.");
+
+			logger.info("Number of results found: " + totalResultSetSize);
+			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
 		} catch (ApiException e) {

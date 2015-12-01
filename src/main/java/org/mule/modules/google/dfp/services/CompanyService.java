@@ -65,13 +65,17 @@ public class CompanyService {
 
 			int totalResultSetSize = 0;
 			List<Company> results = new ArrayList<Company>();
+			
+			CompanyPage initialPage = companyService
+					.getCompaniesByStatement(statementBuilder.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
+			
 			do {
 				// Get companies by statement.
 				CompanyPage page = companyService
 						.getCompaniesByStatement(statementBuilder.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
 					for (Company company : page.getResults()) {
 						results.add(company);
 					}
@@ -81,8 +85,9 @@ public class CompanyService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize + " companies.");
+			logger.info("Number of results found: " + totalResultSetSize);
 
+			logger.info("Number of results retrieved: " + results.size());
 			return results;
 
 		} catch (ApiException e) {

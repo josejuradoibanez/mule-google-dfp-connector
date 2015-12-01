@@ -43,15 +43,17 @@ public class ContactService {
 			int totalResultSetSize = 0;
 			List<Contact> results = new ArrayList<Contact>();
 
+			ContactPage initialPage = contactService.getContactsByStatement(statementBuilder
+					.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
+			
 			logger.info("Getting all contacts.");
 			do {
 				// Get contacts by statement.
-				ContactPage page;
-				page = contactService.getContactsByStatement(statementBuilder
+				ContactPage page = contactService.getContactsByStatement(statementBuilder
 						.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
 					for (Contact contact : page.getResults()) {
 						results.add(contact);
 					}

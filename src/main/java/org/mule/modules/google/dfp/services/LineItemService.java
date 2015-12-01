@@ -46,25 +46,25 @@ public class LineItemService {
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime)
 					.withBindVariableValue("snapshotDateTime", snapshotDateTime);
+
 			int totalResultSetSize = 0;
-			int counter = 0;
-			
+
 			List<LineItem> results = new ArrayList<LineItem>();
-			
+
+			LineItemPage initialPage = lineItemService
+					.getLineItemsByStatement(statementBuilder.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
+
 			do {
-				// Get line items by statement.
 				LineItemPage page = lineItemService
 						.getLineItemsByStatement(statementBuilder.toStatement());
 				logger.info("Current Offset is" + statementBuilder.getOffset());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
 					logger.info("Result Set Size:" + totalResultSetSize);
 					for (LineItem lineItem : page.getResults()) {
 						results.add(lineItem);
-						counter++;
 					}
-					logger.info("Counter:" + counter);
 				}
 
 				statementBuilder
@@ -74,12 +74,12 @@ public class LineItemService {
 						+ statementBuilder.getOffset());
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			System.out.printf("Number of results found: %d\n",
-					totalResultSetSize);
+			logger.info("Number of results found: " + totalResultSetSize);
 
-			System.out.printf("Number of results retrieved: %d\n", counter);
+			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
+
 		} catch (RemoteException e) {
 			throw new GetLineItemsException(e);
 		}
@@ -109,6 +109,10 @@ public class LineItemService {
 				int totalResultSetSize = 0;
 				logger.info("Getting the filtered line items");
 
+				LineItemPage initialPage = lineItemService
+						.getLineItemsByStatement(statementBuilder.toStatement());
+				totalResultSetSize = initialPage.getTotalResultSetSize();
+
 				do {
 					// Get line items by statement.
 					LineItemPage page = lineItemService
@@ -119,7 +123,6 @@ public class LineItemService {
 						totalResultSetSize = page.getTotalResultSetSize();
 						for (LineItem lineItem : page.getResults()) {
 							results.add(lineItem);
-
 						}
 					}
 
@@ -127,7 +130,8 @@ public class LineItemService {
 							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 				} while (statementBuilder.getOffset() < totalResultSetSize);
 
-				logger.info("Retrieved " + totalResultSetSize + " line items.");
+				logger.info("Number of results found: " + totalResultSetSize);
+				logger.info("Number of results retrieved: " + results.size());
 			}
 			return results;
 
@@ -160,6 +164,10 @@ public class LineItemService {
 				int totalResultSetSize = 0;
 				logger.info("Getting the filtered line items by ID.");
 
+				LineItemPage initialPage = lineItemService
+						.getLineItemsByStatement(statementBuilder.toStatement());
+				totalResultSetSize = initialPage.getTotalResultSetSize();
+				
 				do {
 					// Get line items by statement.
 					LineItemPage page = lineItemService
@@ -177,7 +185,9 @@ public class LineItemService {
 							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 				} while (statementBuilder.getOffset() < totalResultSetSize);
 
-				logger.info("Retrieved " + totalResultSetSize + " line items.");
+				logger.info("Number of results found: " + totalResultSetSize);
+
+				logger.info("Number of results retrieved: " + results.size());
 			}
 			return results;
 

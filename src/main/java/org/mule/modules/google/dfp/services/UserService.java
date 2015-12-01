@@ -43,15 +43,16 @@ public class UserService {
 			int totalResultSetSize = 0;
 			List<User> results = new ArrayList<User>();
 
+			UserPage initialPage = userService.getUsersByStatement(statementBuilder
+					.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
 			logger.info("Getting all users.");
 			do {
 				// Get contacts by statement.
-				UserPage page;
-				page = userService.getUsersByStatement(statementBuilder
+				UserPage page = userService.getUsersByStatement(statementBuilder
 						.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
 					for (User user : page.getResults()) {
 						results.add(user);
 					}
@@ -61,7 +62,9 @@ public class UserService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize + " users.");
+
+			logger.info("Number of results found: " + totalResultSetSize);
+			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
 		} catch (RemoteException e) {

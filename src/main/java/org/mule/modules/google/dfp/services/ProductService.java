@@ -49,13 +49,18 @@ public class ProductService {
 			List<Product> results = new ArrayList<Product>();
 			logger.info("Retrieving modified products.");
 
+			
+			ProductPage initialPage = productService
+					.getProductsByStatement(statementBuilder.toStatement());
+			totalResultSetSize = initialPage.getTotalResultSetSize();
+			
 			do {
 				// Get products by statement.
 				ProductPage page = productService
 						.getProductsByStatement(statementBuilder.toStatement());
 
 				if (page.getResults() != null) {
-					totalResultSetSize = page.getTotalResultSetSize();
+				
 
 					for (Product product : page.getResults()) {
 						results.add(product);
@@ -66,7 +71,8 @@ public class ProductService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Retrieved " + totalResultSetSize + " products.");
+			logger.info("Number of results found: " + totalResultSetSize);
+			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
 
