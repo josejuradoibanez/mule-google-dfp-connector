@@ -8,11 +8,11 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.GetLineItemsException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.DateTime;
-import com.google.api.ads.dfp.axis.v201505.LineItem;
-import com.google.api.ads.dfp.axis.v201505.LineItemPage;
-import com.google.api.ads.dfp.axis.v201505.LineItemServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.DateTime;
+import com.google.api.ads.dfp.axis.v201602.LineItem;
+import com.google.api.ads.dfp.axis.v201602.LineItemPage;
+import com.google.api.ads.dfp.axis.v201602.LineItemServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -41,7 +41,7 @@ public class LineItemService {
 
 			StatementBuilder statementBuilder = new StatementBuilder()
 					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
-					.orderBy("lastModifiedDateTime ASC")
+					.orderBy("id ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime)
@@ -58,10 +58,11 @@ public class LineItemService {
 			do {
 				LineItemPage page = lineItemService
 						.getLineItemsByStatement(statementBuilder.toStatement());
-				logger.info("Current Offset is" + statementBuilder.getOffset());
+				logger.debug("Current Offset is "
+						+ statementBuilder.getOffset());
 
 				if (page.getResults() != null) {
-					logger.info("Result Set Size:" + totalResultSetSize);
+					logger.debug("Result Set Size:" + totalResultSetSize);
 					for (LineItem lineItem : page.getResults()) {
 						results.add(lineItem);
 					}
@@ -70,13 +71,14 @@ public class LineItemService {
 				statementBuilder
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 
-				logger.info("Offset increased to: "
+				logger.debug("Offset increased to: "
 						+ statementBuilder.getOffset());
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Number of results found: " + totalResultSetSize);
+			logger.info("Number of results found: " + totalResultSetSize
+					+ '\n' + "Number of results retrieved: "
+					+ results.size());
 
-			logger.info("Number of results retrieved: " + results.size());
 
 			return results;
 
@@ -130,8 +132,10 @@ public class LineItemService {
 							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 				} while (statementBuilder.getOffset() < totalResultSetSize);
 
-				logger.info("Number of results found: " + totalResultSetSize);
-				logger.info("Number of results retrieved: " + results.size());
+				logger.info("Number of results found: " + totalResultSetSize
+						+ '\n' + "Number of results retrieved: "
+						+ results.size());
+
 			}
 			return results;
 
@@ -167,7 +171,7 @@ public class LineItemService {
 				LineItemPage initialPage = lineItemService
 						.getLineItemsByStatement(statementBuilder.toStatement());
 				totalResultSetSize = initialPage.getTotalResultSetSize();
-				
+
 				do {
 					// Get line items by statement.
 					LineItemPage page = lineItemService
@@ -185,9 +189,10 @@ public class LineItemService {
 							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 				} while (statementBuilder.getOffset() < totalResultSetSize);
 
-				logger.info("Number of results found: " + totalResultSetSize);
+				logger.info("Number of results found: " + totalResultSetSize
+						+ '\n' + "Number of results retrieved: "
+						+ results.size());
 
-				logger.info("Number of results retrieved: " + results.size());
 			}
 			return results;
 

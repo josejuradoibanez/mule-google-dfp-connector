@@ -13,7 +13,7 @@ public class ReportDownloadException extends Exception{
 	private static final long serialVersionUID = 6842034221308676994L;
 
 
-	public ReportDownloadException(){
-		super("Report download failed");
+	public ReportDownloadException(Throwable e){
+		super(e);
 	}
 }

@@ -26,15 +26,19 @@ import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
+import org.mule.modules.google.dfp.services.AudienceSegmentService;
 import org.mule.modules.google.dfp.services.CompanyService;
 import org.mule.modules.google.dfp.services.ContactService;
 import org.mule.modules.google.dfp.services.CustomFieldService;
+import org.mule.modules.google.dfp.services.CustomTargetingService;
 import org.mule.modules.google.dfp.services.LineItemService;
 import org.mule.modules.google.dfp.services.OrderService;
+import org.mule.modules.google.dfp.services.PqlService;
 import org.mule.modules.google.dfp.services.ProductService;
 import org.mule.modules.google.dfp.services.ProductTemplateService;
 import org.mule.modules.google.dfp.services.ProposalLineItemService;
 import org.mule.modules.google.dfp.services.ProposalService;
+import org.mule.modules.google.dfp.services.RateCardService;
 import org.mule.modules.google.dfp.services.ReconciliationReportRowService;
 import org.mule.modules.google.dfp.services.ReconciliationReportService;
 import org.mule.modules.google.dfp.services.ReportService;
@@ -69,6 +73,10 @@ public class GoogleDfpConnectionStrategy {
 	private ProductTemplateService productTemplateService;
 	private ReconciliationReportService reconciliationReportService;
 	private ReconciliationReportRowService reconciliationReportRowService;
+	private RateCardService rateCardService;
+	private PqlService pqlService;
+	private AudienceSegmentService audienceSegmentService;
+	private CustomTargetingService customTargetingService;
 
 	/**
 	 * The refresh token for Google DFP
@@ -170,7 +178,7 @@ public class GoogleDfpConnectionStrategy {
 
 			// Initialize and configure Proposal Service
 			proposalService = new ProposalService();
-			
+
 			userService = new UserService();
 
 			// Initialize and configure Proposal Line Item Service
@@ -181,6 +189,12 @@ public class GoogleDfpConnectionStrategy {
 
 			// Initialize and configure reconciliation report row service
 			reconciliationReportRowService = new ReconciliationReportRowService();
+
+			rateCardService = new RateCardService();
+			audienceSegmentService = new AudienceSegmentService();
+			customTargetingService = new CustomTargetingService();
+
+			pqlService = new PqlService();
 
 			/*
 			 * Generate a refreshable OAuth2 credential similar to a ClientLogin
@@ -355,6 +369,40 @@ public class GoogleDfpConnectionStrategy {
 	public void setReconciliationReportRowService(
 			ReconciliationReportRowService reconciliationReportRowService) {
 		this.reconciliationReportRowService = reconciliationReportRowService;
+	}
+
+	public RateCardService getRateCardService() {
+		return rateCardService;
+	}
+
+	public void setRateCardService(RateCardService rateCardService) {
+		this.rateCardService = rateCardService;
+	}
+
+	public AudienceSegmentService getAudienceSegmentService() {
+		return audienceSegmentService;
+	}
+
+	public void setAudienceSegmentService(
+			AudienceSegmentService audienceSegmentService) {
+		this.audienceSegmentService = audienceSegmentService;
+	}
+
+	public CustomTargetingService getCustomTargetingService() {
+		return customTargetingService;
+	}
+
+	public void setCustomTargetingService(
+			CustomTargetingService customTargetingService) {
+		this.customTargetingService = customTargetingService;
+	}
+
+	public PqlService getPqlService() {
+		return pqlService;
+	}
+
+	public void setPqlService(PqlService pqlService) {
+		this.pqlService = pqlService;
 	}
 
 	public List<String> getCustomIds() {

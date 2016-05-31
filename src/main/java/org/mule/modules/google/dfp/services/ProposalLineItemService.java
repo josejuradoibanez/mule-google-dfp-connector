@@ -8,12 +8,12 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.GetProposalLineItemsException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.ApiException;
-import com.google.api.ads.dfp.axis.v201505.DateTime;
-import com.google.api.ads.dfp.axis.v201505.ProposalLineItem;
-import com.google.api.ads.dfp.axis.v201505.ProposalLineItemPage;
-import com.google.api.ads.dfp.axis.v201505.ProposalLineItemServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.ApiException;
+import com.google.api.ads.dfp.axis.v201602.DateTime;
+import com.google.api.ads.dfp.axis.v201602.ProposalLineItem;
+import com.google.api.ads.dfp.axis.v201602.ProposalLineItemPage;
+import com.google.api.ads.dfp.axis.v201602.ProposalLineItemServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -44,7 +44,7 @@ public class ProposalLineItemService {
 			// recently.
 			StatementBuilder statementBuilder = new StatementBuilder()
 					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
-					.orderBy("lastModifiedDateTime ASC")
+					.orderBy("id ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime)
@@ -89,7 +89,7 @@ public class ProposalLineItemService {
 		}
 	}
 
-	public List<ProposalLineItem> getProposalLineItemsByStatementByFilter(
+	public List<ProposalLineItem> getProposalLineItemsByProposalId(
 			DfpSession session, List<Long> proposalIds)
 			throws GetProposalLineItemsException {
 		try {

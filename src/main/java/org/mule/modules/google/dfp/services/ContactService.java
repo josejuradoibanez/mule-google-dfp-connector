@@ -8,10 +8,10 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.GetAllContactsException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.Contact;
-import com.google.api.ads.dfp.axis.v201505.ContactPage;
-import com.google.api.ads.dfp.axis.v201505.ContactServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.Contact;
+import com.google.api.ads.dfp.axis.v201602.ContactPage;
+import com.google.api.ads.dfp.axis.v201602.ContactServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class ContactService {

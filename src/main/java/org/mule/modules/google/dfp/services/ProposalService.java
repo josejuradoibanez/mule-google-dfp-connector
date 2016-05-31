@@ -8,13 +8,15 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.GetProposalsException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.ApiException;
-import com.google.api.ads.dfp.axis.v201505.DateTime;
-import com.google.api.ads.dfp.axis.v201505.Proposal;
-import com.google.api.ads.dfp.axis.v201505.ProposalPage;
-import com.google.api.ads.dfp.axis.v201505.ProposalServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.ApiException;
+import com.google.api.ads.dfp.axis.v201602.DateTime;
+import com.google.api.ads.dfp.axis.v201602.Proposal;
+import com.google.api.ads.dfp.axis.v201602.ProposalPage;
+import com.google.api.ads.dfp.axis.v201602.ProposalServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 public class ProposalService {
 
@@ -41,7 +43,7 @@ public class ProposalService {
 			// recently.
 			StatementBuilder statementBuilder = new StatementBuilder()
 					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
-					.orderBy("lastModifiedDateTime ASC")
+					.orderBy("id ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime)
@@ -73,8 +75,65 @@ public class ProposalService {
 						.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
 			} while (statementBuilder.getOffset() < totalResultSetSize);
 
-			logger.info("Number of results found: " + totalResultSetSize);
-			logger.info("Number of results retrieved: " + results.size());
+			logger.info("Number of results found: " + totalResultSetSize
+					+ '\n' + "Number of results retrieved: "
+					+ results.size());
+			
+			return results;
+		} catch (ApiException e) {
+			throw new GetProposalsException(e);
+		} catch (RemoteException e) {
+			throw new GetProposalsException(e);
+		}
+	}
+	
+	public List<Proposal> getProposalsById(DfpSession session,
+			List<Long> ids)
+			throws GetProposalsException {
+		try {
+			ProposalServiceInterface proposalService = createProposalService(session);
+
+			List<List<Long>> idsBatches = Lists.partition(ids, 400);
+			List<Proposal> results = new ArrayList<Proposal>();
+
+			for (List<Long> currentBatch : idsBatches) {
+
+				String whereClauseFilter = Joiner.on(", ").join(currentBatch);
+				String whereQueryStatement = "id IN (" + whereClauseFilter
+						+ ")";
+
+				StatementBuilder statementBuilder = new StatementBuilder()
+						.where(whereQueryStatement).limit(
+								StatementBuilder.SUGGESTED_PAGE_LIMIT);
+
+				// Default for total result set size.
+				int totalResultSetSize = 0;
+
+				ProposalPage initialPage = proposalService.getProposalsByStatement(statementBuilder
+								.toStatement());
+				totalResultSetSize = initialPage.getTotalResultSetSize();
+
+				do {
+					ProposalPage page = proposalService.getProposalsByStatement(statementBuilder
+							.toStatement());
+
+					if (page.getResults() != null) {
+						totalResultSetSize = page.getTotalResultSetSize();
+						for (Proposal proposal : page
+								.getResults()) {
+							results.add(proposal);
+						}
+					}
+
+					statementBuilder
+							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+				} while (statementBuilder.getOffset() < totalResultSetSize);
+
+				logger.info("Number of results found: " + totalResultSetSize
+						+ '\n' + "Number of results retrieved: "
+						+ results.size());
+
+			}
 
 			return results;
 		} catch (ApiException e) {
@@ -83,5 +142,6 @@ public class ProposalService {
 			throw new GetProposalsException(e);
 		}
 	}
+
 
 }

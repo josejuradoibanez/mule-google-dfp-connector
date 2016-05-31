@@ -16,20 +16,20 @@ import org.mule.modules.google.dfp.exceptions.CreateReportException;
 import org.mule.modules.google.dfp.exceptions.ReportDownloadException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.ReportDownloader;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.ApiException;
-import com.google.api.ads.dfp.axis.v201505.Column;
-import com.google.api.ads.dfp.axis.v201505.Date;
-import com.google.api.ads.dfp.axis.v201505.DateRangeType;
-import com.google.api.ads.dfp.axis.v201505.Dimension;
-import com.google.api.ads.dfp.axis.v201505.DimensionAttribute;
-import com.google.api.ads.dfp.axis.v201505.ExportFormat;
-import com.google.api.ads.dfp.axis.v201505.ReportDownloadOptions;
-import com.google.api.ads.dfp.axis.v201505.ReportJob;
-import com.google.api.ads.dfp.axis.v201505.ReportQuery;
-import com.google.api.ads.dfp.axis.v201505.ReportQueryAdUnitView;
-import com.google.api.ads.dfp.axis.v201505.ReportServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201602.ReportDownloader;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.ApiException;
+import com.google.api.ads.dfp.axis.v201602.Column;
+import com.google.api.ads.dfp.axis.v201602.Date;
+import com.google.api.ads.dfp.axis.v201602.DateRangeType;
+import com.google.api.ads.dfp.axis.v201602.Dimension;
+import com.google.api.ads.dfp.axis.v201602.DimensionAttribute;
+import com.google.api.ads.dfp.axis.v201602.ExportFormat;
+import com.google.api.ads.dfp.axis.v201602.ReportDownloadOptions;
+import com.google.api.ads.dfp.axis.v201602.ReportJob;
+import com.google.api.ads.dfp.axis.v201602.ReportQuery;
+import com.google.api.ads.dfp.axis.v201602.ReportQueryAdUnitView;
+import com.google.api.ads.dfp.axis.v201602.ReportServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import com.google.common.io.Resources;
@@ -608,6 +608,213 @@ public class ReportService {
 
 	}
 
+	public ReportJob totalContractedImpressions(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Creating total contracted impressions report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] {
+				Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.MONTH_AND_YEAR };
+
+		DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] {
+				DimensionAttribute.PROPOSAL_LINE_ITEM_START_DATE_TIME,
+				DimensionAttribute.PROPOSAL_LINE_ITEM_END_DATE_TIME };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.CONTRACTED_REVENUE_LOCAL_CONTRACTED_GROSS_REVENUE,
+				Column.SALES_CONTRACT_CONTRACTED_IMPRESSIONS };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setDimensionAttributes(dimensionAttributes);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			StatementBuilder statementBuilder = new StatementBuilder();
+
+			reportQuery.setStatement(statementBuilder.toStatement());
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+	}
+
+	public ReportJob totalDeliveredImpressions(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Creating total delivered impressons report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.PROPOSAL_LINE_ITEM_ID, Dimension.MONTH_AND_YEAR };
+
+		DimensionAttribute[] dimensionAttributes = new DimensionAttribute[] {
+				DimensionAttribute.LINE_ITEM_START_DATE_TIME,
+				DimensionAttribute.LINE_ITEM_END_DATE_TIME };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] {
+				Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
+				Column.UNIFIED_REVENUE_LOCAL_UNIFIED_GROSS_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setDimensionAttributes(dimensionAttributes);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createTargetingReport(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Creating Targeting report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.TARGETING, Dimension.MONTH_AND_YEAR };
+
+		Column[] columns = new Column[] {
+				Column.TOTAL_LINE_ITEM_LEVEL_IMPRESSIONS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CPM_AND_CPC_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
+	public ReportJob createAudienceReport(DfpSession session,
+			Date startDateWithTimezone, Date endDateWithTimezone)
+			throws CreateReportException {
+
+		logger.info("Creating Audience report");
+
+		// Dimensions to include in the report
+		Dimension[] dimensions = new Dimension[] { Dimension.LINE_ITEM_ID,
+				Dimension.AUDIENCE_SEGMENT_ID, Dimension.MONTH_AND_YEAR,
+				Dimension.AD_UNIT_ID, Dimension.AD_UNIT_NAME };
+
+		// Columns to include in the report
+		Column[] columns = new Column[] { Column.AD_SERVER_IMPRESSIONS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CLICKS,
+				Column.TOTAL_LINE_ITEM_LEVEL_CPM_AND_CPC_REVENUE };
+
+		try {
+			// Get the ReportService.
+			ReportServiceInterface reportService = createReportService(session);
+
+			// Create report query.
+			ReportQuery reportQuery = new ReportQuery();
+			reportQuery.setDimensions(dimensions);
+			// reportQuery.setDimensionAttributes(dimensionAttributes);
+			reportQuery.setAdUnitView(ReportQueryAdUnitView.TOP_LEVEL);
+			reportQuery.setColumns(columns);
+
+			// Create report date range
+			reportQuery.setDateRangeType(DateRangeType.CUSTOM_DATE);
+
+			reportQuery.setStartDate(startDateWithTimezone);
+			reportQuery.setEndDate(endDateWithTimezone);
+
+			// Create report job.
+			ReportJob reportJob = new ReportJob();
+			reportJob.setReportQuery(reportQuery);
+
+			// Run report job.
+			return reportService.runReportJob(reportJob);
+
+		} catch (ApiException e) {
+			throw new CreateReportException(e);
+		} catch (RemoteException e) {
+			throw new CreateReportException(e);
+		} catch (Exception e) {
+			throw new CreateReportException(e);
+		}
+
+	}
+
 	public InputStream downloadReport(DfpSession session, ReportJob reportJob)
 			throws ReportDownloadException {
 		try {
@@ -622,7 +829,9 @@ public class ReportService {
 			boolean success = reportDownloader.waitForReportReady();
 
 			if (!success) {
-				throw new ReportDownloadException();
+				throw new ReportDownloadException(
+						new Throwable(
+								"Cannot download report. Google DFP failed to return the report."));
 			}
 
 			ReportDownloadOptions options = new ReportDownloadOptions();
@@ -633,17 +842,17 @@ public class ReportService {
 			return Resources.asByteSource(url).openStream();
 
 		} catch (ApiException e) {
-			logger.debug("API Exception", e);
-			throw new ReportDownloadException();
+			logger.error("API Exception", e);
+			throw new ReportDownloadException(e);
 		} catch (RemoteException e) {
-			logger.debug("Remote Exception", e);
-			throw new ReportDownloadException();
+			logger.error("Remote Exception", e);
+			throw new ReportDownloadException(e);
 		} catch (IOException e) {
-			logger.debug("IO Exception", e);
-			throw new ReportDownloadException();
+			logger.error("IO Exception", e);
+			throw new ReportDownloadException(e);
 		} catch (Exception e) {
-			logger.debug("Exception", e);
-			throw new ReportDownloadException();
+			logger.error("Exception", e);
+			throw new ReportDownloadException(e);
 		}
 	}
 

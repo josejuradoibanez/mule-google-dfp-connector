@@ -22,14 +22,16 @@ import org.mule.modules.google.dfp.exceptions.TooManyCompaniesFoundException;
 import org.mule.modules.google.dfp.exceptions.UpdateFailedException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.ApiException;
-import com.google.api.ads.dfp.axis.v201505.Company;
-import com.google.api.ads.dfp.axis.v201505.CompanyPage;
-import com.google.api.ads.dfp.axis.v201505.CompanyServiceInterface;
-import com.google.api.ads.dfp.axis.v201505.CompanyType;
-import com.google.api.ads.dfp.axis.v201505.DateTime;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.ApiException;
+import com.google.api.ads.dfp.axis.v201602.Company;
+import com.google.api.ads.dfp.axis.v201602.CompanyPage;
+import com.google.api.ads.dfp.axis.v201602.CompanyServiceInterface;
+import com.google.api.ads.dfp.axis.v201602.CompanyType;
+import com.google.api.ads.dfp.axis.v201602.DateTime;
 import com.google.api.ads.dfp.lib.client.DfpSession;
+import com.google.api.client.repackaged.com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 public class CompanyService {
 
@@ -55,7 +57,7 @@ public class CompanyService {
 			// Create a statement to get company by name
 			StatementBuilder statementBuilder = new StatementBuilder()
 					.where("lastModifiedDateTime > :lastModifiedDateTime AND lastModifiedDateTime <= :snapshotDateTime")
-					.orderBy("lastModifiedDateTime ASC")
+					.orderBy("id ASC")
 					.limit(StatementBuilder.SUGGESTED_PAGE_LIMIT)
 					.withBindVariableValue("lastModifiedDateTime",
 							lastModifiedDateTime)
@@ -97,6 +99,57 @@ public class CompanyService {
 		} catch (Exception e) {
 			throw new GetAllCompaniesException(e);
 		}
+	}
+	
+	public List<Company> getCompaniesById(DfpSession session,
+			List<Long> ids) throws GetAllCompaniesException {
+		try {
+
+			CompanyServiceInterface companyService = createCompanyService(session);
+
+			List<List<Long>> idsBatches = Lists.partition(ids, 400);
+			List<Company> results = new ArrayList<Company>();
+
+
+			for (List<Long> currentBatch : idsBatches) {
+
+				String whereClauseFilter = Joiner.on(", ").join(currentBatch);
+				String whereQueryStatement = "id IN (" + whereClauseFilter
+						+ ")";
+
+				StatementBuilder statementBuilder = new StatementBuilder()
+						.where(whereQueryStatement).limit(
+								StatementBuilder.SUGGESTED_PAGE_LIMIT);
+
+				int totalResultSetSize = 0;
+				
+				CompanyPage initialPage = companyService
+						.getCompaniesByStatement(statementBuilder.toStatement());
+				totalResultSetSize = initialPage.getTotalResultSetSize();
+				
+				do {
+					CompanyPage page = companyService
+							.getCompaniesByStatement(statementBuilder.toStatement());
+
+					if (page.getResults() != null) {
+						for (Company company : page.getResults()) {
+							results.add(company);
+						}
+					}
+
+					statementBuilder
+							.increaseOffsetBy(StatementBuilder.SUGGESTED_PAGE_LIMIT);
+				} while (statementBuilder.getOffset() < totalResultSetSize);
+
+				logger.info("Number of results found: " + totalResultSetSize);
+				logger.info("Number of results retrieved: " + results.size());
+			}
+			return results;
+
+		} catch (RemoteException e) {
+			throw new GetAllCompaniesException(e);
+		}
+
 	}
 
 	public String getCompanyCommentByName(DfpSession session, String name)

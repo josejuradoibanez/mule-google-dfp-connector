@@ -13,11 +13,11 @@ import org.apache.log4j.Logger;
 import org.mule.modules.google.dfp.exceptions.ReconciliationReportException;
 
 import com.google.api.ads.dfp.axis.factory.DfpServices;
-import com.google.api.ads.dfp.axis.utils.v201505.StatementBuilder;
-import com.google.api.ads.dfp.axis.v201505.ApiException;
-import com.google.api.ads.dfp.axis.v201505.ReconciliationReport;
-import com.google.api.ads.dfp.axis.v201505.ReconciliationReportPage;
-import com.google.api.ads.dfp.axis.v201505.ReconciliationReportServiceInterface;
+import com.google.api.ads.dfp.axis.utils.v201602.StatementBuilder;
+import com.google.api.ads.dfp.axis.v201602.ApiException;
+import com.google.api.ads.dfp.axis.v201602.ReconciliationReport;
+import com.google.api.ads.dfp.axis.v201602.ReconciliationReportPage;
+import com.google.api.ads.dfp.axis.v201602.ReconciliationReportServiceInterface;
 import com.google.api.ads.dfp.lib.client.DfpSession;
 
 public class ReconciliationReportService {
